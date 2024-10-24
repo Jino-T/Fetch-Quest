@@ -1170,7 +1170,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2038509138}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72f491f825f2d41139b1ff88de830f6a, type: 3}
   m_Name: 
@@ -1300,6 +1300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   jumpForce: 8
+  airSpeed: 5
   topSpeed: 12
   groundCheck: {fileID: 0}
   groundLayer:
@@ -1371,7 +1372,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2038509138}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66f9087ea2b344588b47c2270214b6ae, type: 3}
   m_Name: 
@@ -1387,7 +1388,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   hardWhenGround: 1
-  fitWhenGround: 0
+  fitWhenGround: 1
   coliderInRope: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

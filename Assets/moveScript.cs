@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed;      // Movement speed of the player
     public float jumpForce;      // Jump force
-
+    public float airSpeed;
     public float topSpeed;
     public Transform groundCheck;     // Position to check if player is grounded
     public LayerMask groundLayer;     // Define what is considered "ground"
@@ -46,9 +46,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        
+        Move();
         if (isGrounded){
-            Move();
+            //Move();
             Jump();
         }
 
@@ -62,7 +62,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
-       
+        if (isGrounded){
             //float moveInput = Input.GetAxis("Horizontal"); // Get input from the horizontal axis (A/D or Left/Right keys)
             float moveInput = Input.GetAxis("Horizontal"); // Get input from the horizontal axis (A/D or Left/Right keys)
             if (rb.velocity.x <  topSpeed){
@@ -70,7 +70,14 @@ public class PlayerMovement : MonoBehaviour
 
             rb.velocity =  new Vector2 (rb.velocity.x + (moveSpeed * Time.deltaTime * moveInput), rb.velocity.y );
             }
-
+        } 
+        else {
+            float moveInput = Input.GetAxis("Horizontal"); // Get input from the horizontal axis (A/D or Left/Right keys)
+            if (rb.velocity.x <  topSpeed){
+            //rb.velocity = new Vector2( 10f, rb.velocity.y);
+            rb.velocity =  new Vector2 (rb.velocity.x + (airSpeed * Time.deltaTime * moveInput), rb.velocity.y );
+            }
+        }
         
     }
 
