@@ -3,13 +3,25 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using System;
+using Unity.VisualScripting;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed;      // Movement speed of the player
+    public float inisAccel;
+
+    public float currsSpeed;
+    public float accelSpeed;      // Movement speed of the player
     public float jumpForce;      // Jump force
     public float airSpeed;
-    public float topSpeed;
+    public float topAirSpeed;
+
+    public float topRunSpeed;
+
+    public float bottomSpeed;
+
+    public bool isMoving= false;
+
+    
     public Transform groundCheck;     // Position to check if player is grounded
     public LayerMask groundLayer;     // Define what is considered "ground"
     
@@ -24,6 +36,11 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
 {
     isGrounded = Physics2D.OverlapCircle(new Vector3(this.transform.position.x, this.transform.position.y, 0), 0.5f, groundLayer);
+
+    if (rb.velocity.magnitude < bottomSpeed && isGrounded && !isMoving){
+       rb.velocity = new Vector3 ( 0f,0f,0f);
+       isMoving = false;
+    }
     /*
     if (isGrounded && Input.GetKeyDown(KeyCode.S))
     {
@@ -46,7 +63,10 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Move();
+        
+            Move();
+            isMoving = true;
+        
         if (isGrounded){
             //Move();
             Jump();
@@ -62,20 +82,31 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
+        float moveInput = Input.GetAxis("Horizontal");
         if (isGrounded){
+            Debug.Log(rb.velocity.x);
+            if (Mathf.Abs(rb.velocity.x) < topRunSpeed){
+                if (!isMoving){
+                    rb.velocity =  new Vector2 ( inisAccel * moveInput, rb.velocity.y );
+                }else{
+                    rb.velocity =  new Vector2 (rb.velocity.x + (accelSpeed  * moveInput), rb.velocity.y );
+                }
+            }
+
+            
             //float moveInput = Input.GetAxis("Horizontal"); // Get input from the horizontal axis (A/D or Left/Right keys)
-            float moveInput = Input.GetAxis("Horizontal"); // Get input from the horizontal axis (A/D or Left/Right keys)
-            if (rb.velocity.x <  topSpeed){
+             // Get input from the horizontal axis (A/D or Left/Right keys)
+            //if (rb.velocity.x <  topSpeed){}
             //rb.velocity = new Vector2( 10f, rb.velocity.y);
 
-            rb.velocity =  new Vector2 (rb.velocity.x + (moveSpeed * Time.deltaTime * moveInput), rb.velocity.y );
-            }
-        } 
-        else {
-            float moveInput = Input.GetAxis("Horizontal"); // Get input from the horizontal axis (A/D or Left/Right keys)
-            if (rb.velocity.x <  topSpeed){
+            
+            
+        } else {
+
+            //float moveInput = Input.GetAxis("Horizontal"); // Get input from the horizontal axis (A/D or Left/Right keys)
+            if (  Math.Abs(rb.velocity.x ) < topAirSpeed ){
             //rb.velocity = new Vector2( 10f, rb.velocity.y);
-            rb.velocity =  new Vector2 (rb.velocity.x + (airSpeed * Time.deltaTime * moveInput), rb.velocity.y );
+            rb.velocity =  new Vector2 (rb.velocity.x + (airSpeed  * moveInput), rb.velocity.y );
             }
         }
         

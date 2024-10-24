@@ -110,14 +110,15 @@ public class tryingBothHook : MonoBehaviour
             //Debug.Log("//////////");
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !active && !over )
+        if (Input.GetKeyDown(KeyCode.Mouse0)  )
         {
-            //Debug.Log(" mouse Down hook" );
+            Debug.Log(" mouse Down hook" );
 
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && !active && !over )
         {
+            Debug.Log(" mouse  hook" );
             //newColid =false;
             HandleMouseDown();
 
@@ -173,56 +174,6 @@ public class tryingBothHook : MonoBehaviour
         {
             _lineRenderer.SetPosition(1, transform.position);
         }
-
-        /*
-        bool colid = false;
-        foreach (GameObject seg in ropeSegments){
-            colid = colid || seg.GetComponent<prefabScript>().isTig;
-
-        }
-       
-        ////Debug.Log(colid);
-        
-        
-
-        if ( softRope == false && over && active && !overremeb){
-            
-            turnSoft();
-            overremeb = true;
-         *
-        }else if (!colid && !over &&softRope && isOnCircumference( mousePos, cirPlayerPos, this.GetComponent<Rigidbody2D>().position, 0.5f) &&  ropeSegments.Count > 0 && active && !moveTowordPoz(mousePos) && !player.isGrounded){
-            ////Debug.Log("i hat this");
-            //List<GameObject> copy = ropeSegments;
-            //this.GetComponent<Rigidbody2D>().velocity  = copy.First<GameObject>().GetComponent<Rigidbody2D>().velocity;
-            this.gameObject.GetComponent<Renderer>().enabled = true;
-            this.GetComponent<Collider2D>().isTrigger = false;
-            deleRope();
-
-            _lineRenderer.SetPosition(0, mousePos);
-            _lineRenderer.SetPosition(1, transform.position);
-            //Debug.Log(mousePos);
-            _distanceJoint.connectedAnchor = mousePos;
-            _distanceJoint.enabled = true;
-            _lineRenderer.enabled = true;
-            //RedirectVelocityAlongCircle(mousePos, this.gameObject);
-            active = true;
-            softRope = false;
-            
-            
-            
-
-        }
-        
-
-        
-
-        if (player.isGrounded && active && !softRope && !(!over && hardWhenGround)){
-            turnSoft();
-            softRope = true;
-            active = true;
-
-        }
-        */
             
         
 
@@ -506,7 +457,7 @@ public class tryingBothHook : MonoBehaviour
     }
 
     void turnHard(bool red, bool maxdis, float dist){
-        Debug.Log("apply dist:" + dist);
+       //Debug.Log("apply dist:" + dist);
         this.GetComponent<Collider2D>().isTrigger = false; // Reset collider to non-trigger
         this.gameObject.GetComponent<Renderer>().enabled = true;
         if (softRope){
@@ -529,7 +480,7 @@ public class tryingBothHook : MonoBehaviour
         _distanceJoint.maxDistanceOnly = maxdis;
 
         _distanceJoint.distance = dist ;
-        Debug.Log("_distanceJoint.distance: "+  _distanceJoint.distance);
+        //Debug.Log("_distanceJoint.distance: "+  _distanceJoint.distance);
     }
 
     void turnHard(bool red, bool maxdis){
@@ -556,7 +507,7 @@ public class tryingBothHook : MonoBehaviour
         _distanceJoint.maxDistanceOnly = maxdis;
 
        currlength = _distanceJoint.distance;
-       Debug.Log("getting currlength: " + currlength);
+       //Debug.Log("getting currlength: " + currlength);
     }
 
 
@@ -592,30 +543,27 @@ public class tryingBothHook : MonoBehaviour
         }
     }
 
-    bool moveTowordPoz (Vector3 hookPoz){
-     Vector3 target = new Vector3 ( mainCamera.ScreenToWorldPoint(hookPoz).x,  mainCamera.ScreenToWorldPoint(hookPoz).y ,  mainCamera.ScreenToWorldPoint(hookPoz).z);  // The object you are moving towards or away from
-     Rigidbody2D rb =  this.GetComponent<Rigidbody2D>();    // The Rigidbody2D of the object being checked (optional)
-        // Get the direction from the object to the target
-        Vector2 directionToTarget = (hookPoz - transform.position).normalized;
+    bool moveTowordPoz(Vector3 hookPoz)
+{
+    Vector3 target = new Vector3(mainCamera.ScreenToWorldPoint(hookPoz).x, 
+                                 mainCamera.ScreenToWorldPoint(hookPoz).y, 
+                                 mainCamera.ScreenToWorldPoint(hookPoz).z);  // Convert hookPoz to world position
+    
+    Rigidbody2D rb = this.GetComponent<Rigidbody2D>();  // The Rigidbody2D of the player or object
+    
+    // Get the direction from the object to the target
+    Vector2 directionToTarget = (target - transform.position).normalized;
 
-        // Get the object's velocity direction
-        Vector2 movementDirection = rb.velocity.normalized;
+    // Get the object's velocity direction
+    Vector2 movementDirection = rb.velocity.normalized;
 
-        // Calculate the dot product
-        float dotProduct = Vector2.Dot(movementDirection, directionToTarget);
+    // Calculate the dot product
+    float dotProduct = Vector2.Dot(movementDirection, directionToTarget);
 
-        // Check if the object is moving toward the target
-        if (dotProduct > 0)
-        {
-            ////Debug.Log("The object is moving towards the target.");
-            return true;
-        }
-        else
-        {
-            ////Debug.Log("The object is moving away from the target.");
-            return false;
-        }
-    }
+    // Check if the object is moving towards the target
+    return dotProduct > 0;
+}
+
 
 
     bool isOnCircumference(Vector2 centerPoint, Vector2 circumferencePoint, Vector2 objectPosition, float tolerance = 0.01f)
