@@ -1039,6 +1039,7 @@ GameObject:
   - component: {fileID: 2038509144}
   - component: {fileID: 2038509148}
   - component: {fileID: 2038509149}
+  - component: {fileID: 2038509150}
   - component: {fileID: 2038509146}
   - component: {fileID: 2038509145}
   - component: {fileID: 2038509147}
@@ -1170,7 +1171,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2038509138}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72f491f825f2d41139b1ff88de830f6a, type: 3}
   m_Name: 
@@ -1300,7 +1301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   jumpForce: 8
-  airSpeed: 5
+  airSpeed: 0
   topSpeed: 12
   groundCheck: {fileID: 0}
   groundLayer:
@@ -1364,7 +1365,7 @@ MonoBehaviour:
   _distanceJoint: {fileID: 0}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!114 &2038509149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1390,6 +1391,26 @@ MonoBehaviour:
   hardWhenGround: 1
   fitWhenGround: 1
   coliderInRope: 2
+--- !u!114 &2038509150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038509138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 911ef5a24b33f43478fbf4c991fe4add, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 519420031}
+  _lineRenderer: {fileID: 2038509145}
+  _distanceJoint: {fileID: 2038509139}
+  player: {fileID: 2038509146}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  scalingFactor: 0.2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
