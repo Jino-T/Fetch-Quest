@@ -8,9 +8,10 @@ public class solidHook : MonoBehaviour
     public Camera mainCamera;
     public LineRenderer _lineRenderer;
     public DistanceJoint2D _distanceJoint;
-    public PlayerMovement player;
+    public Movescript player;
     public LayerMask groundLayer;
-
+    
+    public bool mouseAct;
     private Vector2 mousePos;
 
     // Start is called before the first frame update
@@ -24,8 +25,8 @@ public class solidHook : MonoBehaviour
     void Update()
     {
         bool over = CheckLayerOverlap(transform.position,mousePos,6 );
-
-        if (Input.GetKeyDown(KeyCode.Mouse0) ){
+        if (mouseAct){
+            if (Input.GetKeyDown(KeyCode.Mouse0) ){
             mousePos = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
             
             //bool isGrounded = Physics2D.OverlapCircle(new Vector3( this.transform.position.x , this.transform.position.y, this.transform.position.z), 1.001f, groundLayer);
@@ -33,18 +34,29 @@ public class solidHook : MonoBehaviour
             if ( !player.isGrounded && !over)
             {
                 
-                _lineRenderer.SetPosition(0, mousePos);
-                _lineRenderer.SetPosition(1, transform.position);
-                _distanceJoint.connectedAnchor = mousePos;
-                _distanceJoint.enabled = true;
-                _lineRenderer.enabled = true;
-                RedirectVelocityAlongCircle(mousePos, this.gameObject);
+               handlehook(mousePos) ;
             }
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.Mouse0) ||player.isGrounded || over ){
+            dehook();
+         }
 
+    
 
         }
         
-         if (Input.GetKeyUp(KeyCode.Mouse0) ||player.isGrounded || over )
+
+    public void handlehook(Vector2 endpoint){
+        _lineRenderer.SetPosition(0, endpoint);
+        _lineRenderer.SetPosition(1, this.transform.position);
+        _distanceJoint.connectedAnchor = endpoint;
+        _distanceJoint.enabled = true;
+        _lineRenderer.enabled = true;
+        RedirectVelocityAlongCircle(endpoint, this.gameObject);
+
+    }
+    public void dehook(){
         {
             _distanceJoint.enabled = false;
             _lineRenderer.enabled = false;
@@ -53,6 +65,7 @@ public class solidHook : MonoBehaviour
         {
             _lineRenderer.SetPosition(1, transform.position);
         }
+
     }
 
 

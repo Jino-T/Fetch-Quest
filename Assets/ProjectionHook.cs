@@ -8,10 +8,11 @@ public class ProjectionHook : MonoBehaviour
     public Camera mainCamera;
     public LineRenderer _lineRenderer;
     public DistanceJoint2D _distanceJoint;
-    public PlayerMovement player;
+    public Movescript player;
     public LayerMask groundLayer;
     public float scalingFactor;
     private Vector2 mousePos;
+    public bool mouseAct;
 
     // Start is called before the first frame update
     void Start()
@@ -20,35 +21,50 @@ public class ProjectionHook : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+  void Update()
     {
-        bool over = CheckLayerOverlap(transform.position, mousePos, 6);
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
+        bool over = CheckLayerOverlap(transform.position,mousePos,6 );
+        if (mouseAct){
+            if (Input.GetKeyDown(KeyCode.Mouse0) ){
             mousePos = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
-
-            if (!player.isGrounded && !over)
+            
+            //bool isGrounded = Physics2D.OverlapCircle(new Vector3( this.transform.position.x , this.transform.position.y, this.transform.position.z), 1.001f, groundLayer);
+            //Debug.Log(player.isGrounded);
+            if ( !player.isGrounded && !over)
             {
-                _lineRenderer.SetPosition(0, mousePos);
-                _lineRenderer.SetPosition(1, transform.position);
-                _distanceJoint.connectedAnchor = mousePos;
-                _distanceJoint.enabled = true;
-                _lineRenderer.enabled = true;
-                RedirectVelocityAlongCircle(mousePos, this.gameObject);
+                
+               handlehook(mousePos) ;
+            }
             }
         }
+        if (Input.GetKeyUp(KeyCode.Mouse0) ||player.isGrounded || over ){
+            dehook();
+         }
 
-        if (Input.GetKeyUp(KeyCode.Mouse0) || player.isGrounded || over)
+    
+
+        }
+        
+
+    public void handlehook(Vector2 endpoint){
+        _lineRenderer.SetPosition(0, endpoint);
+        _lineRenderer.SetPosition(1, this.transform.position);
+        _distanceJoint.connectedAnchor = endpoint;
+        _distanceJoint.enabled = true;
+        _lineRenderer.enabled = true;
+        RedirectVelocityAlongCircle(endpoint, this.gameObject);
+
+    }
+    public void dehook(){
         {
             _distanceJoint.enabled = false;
             _lineRenderer.enabled = false;
         }
-
-        if (_distanceJoint.enabled)
+        if (_distanceJoint.enabled) 
         {
             _lineRenderer.SetPosition(1, transform.position);
         }
+
     }
 
     void RedirectVelocityAlongCircle(Vector2 circleCenter, GameObject playerObject)

@@ -2,36 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class prefabScript : MonoBehaviour
+public class PrefabScript : MonoBehaviour
 {
     public bool isTig = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    /// <summary>
-    /// Sent each frame where another object is within a trigger collider
-    /// attached to this object (2D physics only).
-    /// </summary>
-    /// <param name="other">The other Collider2D involved in this collision.</param>
     void OnTriggerStay2D(Collider2D other)
     {
-        // Compare the layer of the other object
+        // Set isTig to true if triggered by an object on the "ground" layer
         if (other.gameObject.layer == LayerMask.NameToLayer("ground"))
         {
             isTig = true;
-        }else{
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        // Set isTig to false when exiting an object on the "ground" layer
+        if (other.gameObject.layer == LayerMask.NameToLayer("ground"))
+        {
+            //Debug.Log("Left ground trigger");
             isTig = false;
         }
     }
 }
-

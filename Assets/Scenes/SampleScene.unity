@@ -473,6 +473,90 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1022406087
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1022406092}
+  - component: {fileID: 1022406093}
+  - component: {fileID: 1022406094}
+  m_Layer: 0
+  m_Name: PlayerManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1022406092
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022406087}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.165906, y: 2.5629983, z: 0.031302933}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1022406093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022406087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9c260799c804e4685db18de34fa1c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hookDrag: 0
+  hookType: 1
+  hooked: 0
+  mouseAct: 1
+  hooks:
+    serializedVersion: 2
+    m_Bits: 512
+  playerMoveState: {fileID: 1022406094}
+  playerObject: {fileID: 2038509138}
+--- !u!114 &1022406094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022406087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d7f7e348f92e422890f3152d197e369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialAcceleration: 8
+  accelerationSpeed: 1
+  airSpeed: 3
+  jumpForce: 7
+  jumpFloat: 2
+  maxAirSpeed: 5
+  maxRunSpeed: 12
+  minSpeed: 3
+  groundDrag: 1.5
+  airDrag: 0.5
+  isMoving: 0
+  isGrounded: 0
+  hooked: 0
+  grappleManager: {fileID: 1022406093}
+  rb: {fileID: 2038509140}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &1222110541
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,8 +972,8 @@ Transform:
   m_GameObject: {fileID: 1578338984}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.79, y: 9.02, z: 0}
-  m_LocalScale: {x: 2.265742, y: 1.189807, z: 1}
+  m_LocalPosition: {x: 13.79, y: 1.85, z: 0}
+  m_LocalScale: {x: 1.3311234, y: 1.189807, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1018,7 +1102,7 @@ Transform:
   m_GameObject: {fileID: 1803907325}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.26, y: -0.56, z: 0}
+  m_LocalPosition: {x: -5.5, y: -0.56, z: 0}
   m_LocalScale: {x: 5.3311577, y: 1.189807, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1040,7 +1124,7 @@ GameObject:
   - component: {fileID: 2038509148}
   - component: {fileID: 2038509149}
   - component: {fileID: 2038509150}
-  - component: {fileID: 2038509146}
+  - component: {fileID: 2038509151}
   - component: {fileID: 2038509145}
   - component: {fileID: 2038509147}
   m_Layer: 0
@@ -1096,7 +1180,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!212 &2038509142
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1179,10 +1263,11 @@ MonoBehaviour:
   mainCamera: {fileID: 519420031}
   _lineRenderer: {fileID: 2038509145}
   _distanceJoint: {fileID: 2038509139}
-  player: {fileID: 2038509146}
+  player: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  mouseAct: 0
 --- !u!120 &2038509145
 LineRenderer:
   serializedVersion: 2
@@ -1287,32 +1372,6 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &2038509146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2038509138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d7f7e348f92e422890f3152d197e369, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inisAccel: 8
-  currsSpeed: 10
-  accelSpeed: 0.5
-  jumpForce: 10
-  airSpeed: 3
-  topAirSpeed: 20
-  topRunSpeed: 12
-  bottomSpeed: 3
-  isMoving: 0
-  groundCheck: {fileID: 0}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  isGrounded: 0
 --- !u!58 &2038509147
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1363,14 +1422,15 @@ MonoBehaviour:
   segmentPrefab: {fileID: 2922789774956722926, guid: 255e1d993372d4b3c8b87be728c50db8, type: 3}
   segmentCount: 0
   startPoint: {fileID: 67009781}
-  endPoint: {fileID: 1222110542}
   mainCamera: {fileID: 519420031}
-  player: {fileID: 2038509146}
+  player: {fileID: 0}
   _lineRenderer: {fileID: 0}
   _distanceJoint: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  detal: 0
+  mouseAct: 0
 --- !u!114 &2038509149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1378,24 +1438,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2038509138}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66f9087ea2b344588b47c2270214b6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   segmentPrefab: {fileID: 2922789774956722926, guid: 255e1d993372d4b3c8b87be728c50db8, type: 3}
   startPoint: {fileID: 67009781}
-  endPoint: {fileID: 1222110542}
+  endPoint: {x: 0, y: 0}
   mainCamera: {fileID: 519420031}
-  player: {fileID: 2038509146}
+  player: {fileID: 0}
   _lineRenderer: {fileID: 2038509145}
   _distanceJoint: {fileID: 2038509139}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  active: 0
+  start: 0
   hardWhenGround: 1
   fitWhenGround: 1
   coliderInRope: 2
+  mouseAct: 0
 --- !u!114 &2038509150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1411,11 +1474,43 @@ MonoBehaviour:
   mainCamera: {fileID: 519420031}
   _lineRenderer: {fileID: 2038509145}
   _distanceJoint: {fileID: 2038509139}
-  player: {fileID: 2038509146}
+  player: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   scalingFactor: 0.2
+  mouseAct: 0
+--- !u!114 &2038509151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038509138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09bc48ea688284c80a653296254a5b78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  segmentPrefab: {fileID: 2922789774956722926, guid: 255e1d993372d4b3c8b87be728c50db8, type: 3}
+  startPoint: {fileID: 2038509143}
+  endPoint: {x: 0, y: 0}
+  mainCamera: {fileID: 519420031}
+  _lineRenderer: {fileID: 2038509145}
+  _distanceJoint: {fileID: 2038509139}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  player: {fileID: 1022406094}
+  grappleManager: {fileID: 1022406093}
+  active: 0
+  start: 0
+  hardWhenGround: 1
+  fitWhenGround: 0
+  coliderInRope: 2
+  scalingFactor: 0
+  perimLean: 0.2
+  mouseAct: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1430,3 +1525,4 @@ SceneRoots:
   - {fileID: 516961533}
   - {fileID: 67009781}
   - {fileID: 1222110542}
+  - {fileID: 1022406092}

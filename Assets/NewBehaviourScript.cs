@@ -8,7 +8,7 @@ public class SolideHook : MonoBehaviour
     public Camera mainCamera;
     public LineRenderer _lineRenderer;
     public DistanceJoint2D _distanceJoint;
-    public PlayerMovement player;
+    public Movescript player;
     public LayerMask groundLayer;
 
     // Start is called before the first frame update

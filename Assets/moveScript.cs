@@ -1,139 +1,175 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using UnityEngine;
-using System;
-using Unity.VisualScripting;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
-public class PlayerMovement : MonoBehaviour
+public class Movescript : MonoBehaviour
 {
-    public float inisAccel;
-
-    public float currsSpeed;
-    public float accelSpeed;      // Movement speed of the player
-    public float jumpForce;      // Jump force
+    public float initialAcceleration;
+    public float accelerationSpeed;
     public float airSpeed;
-    public float topAirSpeed;
+    public float jumpForce;
 
-    public float topRunSpeed;
+    public float jumpFloat;
+    
+    public float maxAirSpeed;
+    public float maxRunSpeed;
+    public float minSpeed;
+    public float groundDrag;
+    public float airDrag;
 
-    public float bottomSpeed;
+    public bool isMoving = false;
+    public bool isGrounded = false;
 
-    public bool isMoving= false;
+    public bool hooked;
+
+    public GrappleManager grappleManager;
+
+    //private Vector2 storedDirection;
+    public Rigidbody2D rb;
+    private GameInput controls;
+
+    public LayerMask groundLayer;
+    private Vector2 storedDirection = Vector2.zero;
+    private bool activeJump = false;
+
+    private void Start()
+    {
+        
+       
+    }
+
+    private void Update()
+    {
+        isGrounded = Physics2D.OverlapCircle(transform.position, 0.5f, groundLayer);
+        hooked = grappleManager.hooked;
+        
+    }
+    private void Awake() {
+        controls = new GameInput();
+        //controls.Player.Movment.performed += ctx => Move(ctx.ReadValue<Vector2>());  
+    }
+
+     private void OnEnable()
+    {
+        controls.Enable();
+        controls.Player.Movment.performed += ActvieMove; 
+        controls.Player.Movment.canceled += DeActiveMove;
+
+        controls.Player.JHook.performed += ActvieJump; 
+        controls.Player.JHook.canceled += DeActiveJump;
+    }
+
+    private void OnDisable()
+    {
+        controls.Disable();
+        controls.Player.Movment.performed -= ActvieMove; 
+        controls.Player.Movment.canceled -= DeActiveMove;
+    }
 
     
-    public Transform groundCheck;     // Position to check if player is grounded
-    public LayerMask groundLayer;     // Define what is considered "ground"
-    
-    private Rigidbody2D rb;
-    public bool isGrounded;
-    private float fallSpeed;
 
-    void Start()
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void FixedUpdate()
     {
-        rb = GetComponent<Rigidbody2D>();
+        //Debug.Log(storedDirection);
+        isGrounded = Physics2D.OverlapCircle(new Vector3(rb.transform.position.x, rb.transform.position.y, 0), 0.5f, groundLayer);
+        HandleMovement();
+       
     }
-    private void FixedUpdate()
-{
-    isGrounded = Physics2D.OverlapCircle(new Vector3(this.transform.position.x, this.transform.position.y, 0), 0.5f, groundLayer);
 
-    if (rb.velocity.magnitude < bottomSpeed && isGrounded && !isMoving){
-       rb.velocity = new Vector3 ( 0f,0f,0f);
-       isMoving = false;
-    }
-    /*
-    if (isGrounded && Input.GetKeyDown(KeyCode.S))
-    {
-        // Reset fallSpeed when grounded
-        Debug.Log(rb.velocity.x);
-        rb.velocity = new Vector2(rb.velocity.x + ( (Mathf.Sign(rb.velocity.x) *-1) * fallSpeed), 0);
-        fallSpeed = 0;
-    }
-    else
-    {
-        // Update fallSpeed if not grounded
-        fallSpeed = rb.velocity.y;
-        
-        // Adjust horizontal velocity based on current movement direction and fallSpeed
-        //float moveInput = Input.GetAxis("Horizontal");
-        
-    }
-    */
-}
+   
 
-    void Update()
+    public void ActvieMove(InputAction.CallbackContext value)
     {
-        
-            Move();
-            isMoving = true;
-        
-        if (isGrounded){
-            //Move();
-            Jump();
-        }
+        storedDirection = value.ReadValue<Vector2>();
+        Debug.Log("applyed storedDirection: "+ storedDirection);
+        //moveVect = value.ReadValue<Vector2>();
+    }
+    public void DeActiveMove ( InputAction.CallbackContext value){
+        storedDirection = Vector2.zero;
+    }
 
-        
-        if (Input.GetKeyDown(KeyCode.R)){
+    public void ActvieJump(InputAction.CallbackContext context){
+        activeJump = true;
+    }
+
+    public void DeActiveJump(InputAction.CallbackContext context){
+        activeJump = false;
+    }
+
+
+
+    private void HandleMovement()
+    {
+        //Debug.Log("storedDirection: "+ storedDirection);
+       if (Input.GetKeyDown(KeyCode.R))
+        {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+
         
-
-    }
-
-    void Move()
-    {
-        float moveInput = Input.GetAxis("Horizontal");
-        if (isGrounded){
-            Debug.Log(rb.velocity.x);
-            if (Mathf.Abs(rb.velocity.x) < topRunSpeed){
-                if (!isMoving){
-                    rb.velocity =  new Vector2 ( inisAccel * moveInput, rb.velocity.y );
+        if ( isGrounded){
+            //Debug.Log("grounded");
+            if (Mathf.Abs(storedDirection.x)> 0.1f){
+                Debug.Log("storedDirection: " + storedDirection);
+                if (maxRunSpeed >= Mathf.Abs(rb.velocity.x)){
+                    if ( !isMoving){
+                    rb.velocity = new Vector2(rb.velocity.x + (initialAcceleration * storedDirection.x), rb.velocity.y);
+                    isMoving = true;
+                    }else{
+                        rb.velocity = new Vector2(rb.velocity.x + (accelerationSpeed * storedDirection.x), rb.velocity.y);
+                    }
                 }else{
-                    rb.velocity =  new Vector2 (rb.velocity.x + (accelSpeed  * moveInput), rb.velocity.y );
+                    rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+                }
+                
+            }else{
+                if ( rb.velocity.x <= minSpeed){
+                    rb.velocity = new Vector2 (0f, rb.velocity.y);
+                    isMoving =false;
+                }else{
+                    rb.velocity = new Vector2(rb.velocity.x - (groundDrag * Mathf.Sign(rb.velocity.x)), rb.velocity.y);
+                }
+                
+
+            }
+
+            if ( activeJump){
+                //this might cause problems if add to y velocity on ground then jump
+                //rb.velocity = new Vector2(rb.velocity.x , rb.velocity.y + jumpForce);
+                rb.velocity = new Vector2(rb.velocity.x ,  jumpForce);
+               
+            }
+            
+
+        }else {
+            if (!hooked){
+            
+                if (Mathf.Abs(storedDirection.x)> 0.1f){
+                    if (maxAirSpeed >= Mathf.Abs(rb.velocity.x)){
+                        rb.velocity = new Vector2(rb.velocity.x + (airSpeed * storedDirection .x ), rb.velocity.y );
+                    }else{
+                        rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+                    }
+                    
+                }else{
+                    rb.velocity = new Vector2(rb.velocity.x - (airDrag * Mathf.Sign(rb.velocity.x)), rb.velocity.y);
+
+                }
+
+                if ( activeJump && rb.velocity.y < 0){
+                    rb.velocity = new Vector2(rb.velocity.x , rb.velocity.y + jumpFloat);
                 }
             }
-
             
-            //float moveInput = Input.GetAxis("Horizontal"); // Get input from the horizontal axis (A/D or Left/Right keys)
-             // Get input from the horizontal axis (A/D or Left/Right keys)
-            //if (rb.velocity.x <  topSpeed){}
-            //rb.velocity = new Vector2( 10f, rb.velocity.y);
-
-            
-            
-        } else {
-
-            //float moveInput = Input.GetAxis("Horizontal"); // Get input from the horizontal axis (A/D or Left/Right keys)
-            if (  Math.Abs(rb.velocity.x ) < topAirSpeed ){
-            //rb.velocity = new Vector2( 10f, rb.velocity.y);
-            rb.velocity =  new Vector2 (rb.velocity.x + (airSpeed  * moveInput), rb.velocity.y );
-            }
         }
+        //isGrounded = Physics2D.OverlapCircle(new Vector3(rb.transform.position.x, rb.transform.position.y, 0), 0.5f, groundLayer);
         
+    
     }
-
-    void Jump()
-    {
-        //isGrounded = Physics2D.OverlapCircle(new Vector3( this.transform.position.x , this.transform.position.y, this.transform.position.z), 1.001f, groundLayer); // Check if grounded
-
-        if ( Input.GetKeyDown(KeyCode.Space))  // Check for jump input and grounded status
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Apply jump force
-        }
-    }
-    /*
-    private void OnTriggerEnter(Collider other) {
-        if (other.gameObject.layer == groundLayer){
-            isGrounded = true;
-        }
-    }
-    private void OnTriggerStay2D(Collider2D other) {
-         if (other.gameObject.layer == groundLayer){
-            isGrounded = true;
-        }else{
-            isGrounded = false;
-        }
-        
-    }
-    */
 }
