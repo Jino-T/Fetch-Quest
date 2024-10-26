@@ -45,7 +45,9 @@ public class softProto : MonoBehaviour
 
     public float scalingFactor;
 
-    public float perimLean;
+    public float perimLean = 0.2f;
+
+    public float standStillSVelo = 0f;
 
     
 
@@ -215,215 +217,186 @@ void FixedUpdate()
     {
         grappleManager.hooked = true;
         ////Debug.Log(player.isGrounded);
-            
-            
 
-            if (!overremeb && over){
-                    Debug.Log("t");
-                        turnSoft();
-                        overremeb = true;
-                        //newColid = true;
-            }
-            if ( !player.isGrounded){
+        if (!overremeb && over){
+                Debug.Log("t");
+                    turnSoft();
+                    overremeb = true;
+                    //newColid = true;
+        }
+        if ( !player.isGrounded){
 
-                if ( !over){
-                    //Debug.Log(isOnCircumference(endPoint, pointActive, this.transform.position, 2f ));
-                    if (hardWhenGround && softRope && !over && !newColid && isOnCircumference(endPoint, pointActive, this.transform.position, perimLean ) ){
-                        Debug.Log("0");
-
-                        turnHard(false, true, currlength);
-                    }
-
-                    
-                    //if want to have soft rope when not at max curcufances
-
-                    /*
-                    if (softSlack){
-                        if (!moveTowordPoz(mousePos) && softRope == true && !newColid && isOnCircumference( mousePos, cirPlayerPos, this.GetComponent<Rigidbody2D>().position, 0.5f) && !over  ){
-                        //Debug.Log("o");
-                        
-                        turnHard(false, hardWhenGround);
-                        }
-        
-
-                    
-                    
-
-
-                    if ( moveTowordPoz(mousePos) && !overremeb && over){
-                        ////Debug.Log("h");
-
-                        turnSoft();
-                        overremeb = true;
-                    }
-
-                    }*/
-                    
-                    
-                    
-                    
-
-
-                }else{
-
-                }
-            } else{
-                ////Debug.Log("active");
+            if ( !over){
                 //Debug.Log(isOnCircumference(endPoint, pointActive, this.transform.position, 2f ));
-                if (hardWhenGround && softRope && !over && !newColid ){
+                if (hardWhenGround && softRope && !over && !newColid && isOnCircumference(endPoint, pointActive, this.transform.position, perimLean ) && this.GetComponent<Rigidbody2D>().velocity.magnitude > standStillSVelo ){
                     Debug.Log("0");
 
                     turnHard(false, true, currlength);
-                    //overremeb = false;
                 }
 
-                /*
-                if ( !over  && fitWhenGround && !softRope &&  this.GetComponent<Rigidbody2D>().velocity.magnitude < 1f  ){
-                    Debug.Log("l");
-                    turnHard(false, true, currlength);
-                }
-                */
+            }else{}
 
-                if(!hardWhenGround && !overremeb) {
-                    Debug.Log("7");
+        } else{
+            ////Debug.Log("active");
+            //Debug.Log(isOnCircumference(endPoint, pointActive, this.transform.position, 2f ));
+            if (hardWhenGround && softRope && !over && !newColid ){
+                Debug.Log("0");
 
-                    turnSoft();
-                    overremeb = true;
+                turnHard(false, true, currlength);
+                //overremeb = false;
                 }
-                if ( fitWhenGround){
-                    currlength = Vector2.Distance(this.transform.position, endPoint);
-                }
+
+            /*
+            if ( !over  && fitWhenGround && !softRope &&  this.GetComponent<Rigidbody2D>().velocity.magnitude < 1f  ){
+                Debug.Log("l");
+                turnHard(false, true, currlength);
             }
-            if (player.isGrounded && fitWhenGround && !softRope){
-                Debug.Log("apple");
-                turnHard(false, true,currlength);
+            */
+
+            if(!hardWhenGround && !overremeb) {
+                Debug.Log("7");
+
+                turnSoft();
+                overremeb = true;
+                }
+            if ( fitWhenGround){
                 currlength = Vector2.Distance(this.transform.position, endPoint);
             }
+        }
+
+        if (player.isGrounded && fitWhenGround && !softRope){
+            Debug.Log("apple");
+            turnHard(false, true,currlength);
+            currlength = Vector2.Distance(this.transform.position, endPoint);
+        }
+
+        
             
 
     }
 
     void CreateRope()
-{
-    
-    if (startPoint == null || endPoint == null)
     {
-        //Debug.LogError("StartPoint and EndPoint must be assigned!");
-        return;
-    }
-    this.GetComponent<Rigidbody2D>().mass = 0f;
-
-    GameObject previousSegment = null;
-
-    //Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-    //endPoint = new Vector3(endPoint.transform.position.x, endPoint.transform.position.y, endPoint.position.z);
-
-    Vector2 playerHeight = this.GetComponent<Renderer>().bounds.size;
-
-    float distance = currlength;
-    float segmentCount = (distance) / segmentLength;
-    int wholeSegmentCount = Mathf.CeilToInt(segmentCount);
-    wholeSegmentCount = wholeSegmentCount- 4;
-
-    // Define layer indices (assuming RopeLayer and LastSegmentLayer have been created)
-    int ropeLayer = LayerMask.NameToLayer("RopeLayer");
-    int lastSegmentLayer = LayerMask.NameToLayer("LastSegmentLayer");
-    
-    
-
-    for (int i = 0; i < wholeSegmentCount; i++)
-    {
-        Vector2 segmentPosition = Vector2.Lerp(
-    new Vector2(startPoint.position.x, startPoint.position.y + playerHeight.y), 
-    endPoint, 
-    (float)i / (wholeSegmentCount - 1)
-);
-        GameObject segment = Instantiate(segmentPrefab, segmentPosition, Quaternion.identity);
-        segment.name = "RopeSegment_" + i;
-        ropeSegments.Add(segment);
-
-        // Set the layer for the rope segments
-        segment.layer = ropeLayer;
-
-        Rigidbody2D rb = segment.GetComponent<Rigidbody2D>();
-        if (rb == null)
+        
+        if (startPoint == null || endPoint == null)
         {
-            rb = segment.AddComponent<Rigidbody2D>();
-            if (i == wholeSegmentCount - 1)
-            {
-                rb.bodyType = RigidbodyType2D.Kinematic;
-                rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
-            }
-            rb.gravityScale = 1f;
+            //Debug.LogError("StartPoint and EndPoint must be assigned!");
+            return;
         }
+        this.GetComponent<Rigidbody2D>().mass = 0f;
 
-        if (previousSegment != null)
-        {
-            segment.GetComponent<Rigidbody2D>().mass = 0;
-            DistanceJoint2D joint = segment.AddComponent<DistanceJoint2D>();
-            joint.connectedBody = previousSegment.GetComponent<Rigidbody2D>();
-            joint.autoConfigureDistance = false; // Disable automatic distance configuration
-            joint.distance = segmentLength; // Set the initial distance
-            joint.maxDistanceOnly = true; // Allow shortening but prevent growing
-        }
-        if (segment.name.Equals( "RopeSegment_0") ){
-            DistanceJoint2D joint = segment.AddComponent<DistanceJoint2D>();
-            joint.connectedBody = this.GetComponent<Rigidbody2D>();
-            joint.autoConfigureDistance = false; // Disable automatic distance configuration
-            joint.distance = playerHeight.y/2; // Set the initial distance
-            joint.maxDistanceOnly = true;
-            last =segment;
+        GameObject previousSegment = null;
 
-            //ConnectPlayerToRope(this.gameObject, segment.gameObject);
-        }
+        //Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        //endPoint = new Vector3(endPoint.transform.position.x, endPoint.transform.position.y, endPoint.position.z);
+
+        Vector2 playerHeight = this.GetComponent<Renderer>().bounds.size;
+
+        float distance = currlength;
+        float segmentCount = (distance - playerHeight.y) / segmentLength;
+        int wholeSegmentCount = Mathf.CeilToInt(segmentCount);
+        //wholeSegmentCount = wholeSegmentCount ;
+
+        // Define layer indices (assuming RopeLayer and LastSegmentLayer have been created)
+        int ropeLayer = LayerMask.NameToLayer("RopeLayer");
+        int lastSegmentLayer = LayerMask.NameToLayer("LastSegmentLayer");
+        
         
 
-        previousSegment = segment;
-
-        // Set collider trigger behavior
-        if (i % 2 == 0)
+        for (int i = 0; i < wholeSegmentCount; i++)
         {
-            segment.GetComponent<Collider2D>().isTrigger = false;
-        }
-        else
-        {
-            segment.GetComponent<Collider2D>().isTrigger = true;
-        }
-    }
+            Vector2 segmentPosition = Vector2.Lerp(
+            new Vector2(startPoint.position.x, startPoint.position.y + playerHeight.y), 
+            endPoint, 
+            (float)i / (wholeSegmentCount - 1));
 
-    for (int i = 0; i < wholeSegmentCount; i++)
-    {
-        float velocityFactor = Mathf.Lerp(1f, 0.1f, (float)i / (segmentCount - 1));
+            GameObject segment = Instantiate(segmentPrefab, segmentPosition, Quaternion.identity);
+            segment.name = "RopeSegment_" + i;
+            ropeSegments.Add(segment);
+
+            // Set the layer for the rope segments
+            segment.layer = ropeLayer;
+
+            Rigidbody2D rb = segment.GetComponent<Rigidbody2D>();
+            if (rb == null)
+            {
+                rb = segment.AddComponent<Rigidbody2D>();
+                if (i == wholeSegmentCount - 1)
+                {
+                    rb.bodyType = RigidbodyType2D.Kinematic;
+                    rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
+                }
+                rb.gravityScale = 1f;
+            }
+
+            if (previousSegment != null)
+            {
+                segment.GetComponent<Rigidbody2D>().mass = 0;
+                DistanceJoint2D joint = segment.AddComponent<DistanceJoint2D>();
+                joint.connectedBody = previousSegment.GetComponent<Rigidbody2D>();
+                joint.autoConfigureDistance = false; // Disable automatic distance configuration
+                joint.distance = segmentLength; // Set the initial distance
+                joint.maxDistanceOnly = true; // Allow shortening but prevent growing
+            }
+            if (segment.name.Equals( "RopeSegment_0") ){
+                DistanceJoint2D joint = segment.AddComponent<DistanceJoint2D>();
+                joint.connectedBody = this.GetComponent<Rigidbody2D>();
+                joint.autoConfigureDistance = false; // Disable automatic distance configuration
+                joint.distance = playerHeight.y/2; // Set the initial distance
+                joint.maxDistanceOnly = true;
+                last =segment;
+
+                //ConnectPlayerToRope(this.gameObject, segment.gameObject);
+            }
+            
+
+            previousSegment = segment;
+
+            // Set collider trigger behavior
+            if (i % 2 == 0)
+            {
+                segment.GetComponent<Collider2D>().isTrigger = false;
+            }
+            else
+            {
+                segment.GetComponent<Collider2D>().isTrigger = true;
+            }
+
+            float velocityFactor = Mathf.Lerp(1f, 0.1f, (float)i / (wholeSegmentCount - 1));
+            segment.GetComponent<Rigidbody2D>().velocity = this.GetComponent<Rigidbody2D>().velocity * velocityFactor;
+
+        }
+
         //ropeSegments[i].GetComponent<Rigidbody2D>().velocity = this.GetComponent<Rigidbody2D>().velocity * velocityFactor;
+        
+
+        // Assign the 'last' object and set its properties
+        /*
+        last = ropeSegments.First<GameObject>();
+        last.transform.localScale = new Vector3(1f, 1f, 1f);
+        last.GetComponent<Collider2D>().isTrigger = false;
+        last.GetComponent<Rigidbody2D>().mass = 0;
+        last.GetComponent<Rigidbody2D>().gravityScale = 1;
+        last.GetComponent<Rigidbody2D>().freezeRotation = true;
+        last.AddComponent<PlayerMovement>();
+        */
+
+        // Set the layer for the 'last' segment
+        this.gameObject.layer = lastSegmentLayer;
+        
+
+        // Prevent collision between the rope and the last segment
+        Physics2D.IgnoreLayerCollision(ropeLayer, lastSegmentLayer, true);
+
+        // Create the final joint connecting to the endPoint
+        DistanceJoint2D finalJoint = previousSegment.AddComponent<DistanceJoint2D>();
+        finalJoint.connectedAnchor = endPoint;
+        finalJoint.distance = 0.5f;
+        finalJoint.maxDistanceOnly = true;
+        finalJoint.autoConfigureDistance = false;
+        finalJoint.GetComponent<Rigidbody2D>().mass = 0;
+        last.GetComponent<Rigidbody2D>().mass = 0;
     }
-
-    // Assign the 'last' object and set its properties
-    /*
-    last = ropeSegments.First<GameObject>();
-    last.transform.localScale = new Vector3(1f, 1f, 1f);
-    last.GetComponent<Collider2D>().isTrigger = false;
-    last.GetComponent<Rigidbody2D>().mass = 0;
-    last.GetComponent<Rigidbody2D>().gravityScale = 1;
-    last.GetComponent<Rigidbody2D>().freezeRotation = true;
-    last.AddComponent<PlayerMovement>();
-    */
-
-    // Set the layer for the 'last' segment
-    this.gameObject.layer = lastSegmentLayer;
-    
-
-    // Prevent collision between the rope and the last segment
-    Physics2D.IgnoreLayerCollision(ropeLayer, lastSegmentLayer, true);
-
-    // Create the final joint connecting to the endPoint
-    DistanceJoint2D finalJoint = previousSegment.AddComponent<DistanceJoint2D>();
-    finalJoint.connectedAnchor = endPoint;
-    finalJoint.distance = 0.5f;
-    finalJoint.maxDistanceOnly = true;
-    finalJoint.autoConfigureDistance = false;
-    finalJoint.GetComponent<Rigidbody2D>().mass = 0;
-    last.GetComponent<Rigidbody2D>().mass = 0;
-}
 
 void ConnectPlayerToRope(GameObject playerObject, GameObject ropeEndPoint)
 {
