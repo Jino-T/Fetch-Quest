@@ -49,14 +49,14 @@ public class Movescript : MonoBehaviour
     }
     private void Awake() {
         controls = new GameInput();
-        //controls.Player.Movment.performed += ctx => Move(ctx.ReadValue<Vector2>());  
+        //controls.Player.Movement.performed += ctx => Move(ctx.ReadValue<Vector2>());  
     }
 
      private void OnEnable()
     {
         controls.Enable();
-        controls.Player.Movment.performed += ActvieMove; 
-        controls.Player.Movment.canceled += DeActiveMove;
+        controls.Player.Movement.performed += ActvieMove; 
+        controls.Player.Movement.canceled += DeActiveMove;
 
         controls.Player.JHook.performed += ActvieJump; 
         controls.Player.JHook.canceled += DeActiveJump;
@@ -65,11 +65,10 @@ public class Movescript : MonoBehaviour
     private void OnDisable()
     {
         controls.Disable();
-        controls.Player.Movment.performed -= ActvieMove; 
-        controls.Player.Movment.canceled -= DeActiveMove;
+        controls.Player.Movement.performed -= ActvieMove; 
+        controls.Player.Movement.canceled -= DeActiveMove;
     }
 
-    
 
     /// <summary>
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
@@ -87,7 +86,7 @@ public class Movescript : MonoBehaviour
     public void ActvieMove(InputAction.CallbackContext value)
     {
         storedDirection = value.ReadValue<Vector2>();
-        Debug.Log("applyed storedDirection: "+ storedDirection);
+        Debug.Log("applied storedDirection: "+ storedDirection);
         //moveVect = value.ReadValue<Vector2>();
     }
     public void DeActiveMove ( InputAction.CallbackContext value){
