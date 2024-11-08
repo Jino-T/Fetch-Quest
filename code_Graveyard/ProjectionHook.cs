@@ -28,16 +28,16 @@ public class ProjectionHook : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0) ){
             mousePos = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
             
-            //bool isGrounded = Physics2D.OverlapCircle(new Vector3( this.transform.position.x , this.transform.position.y, this.transform.position.z), 1.001f, groundLayer);
-            //Debug.Log(player.isGrounded);
-            if ( !player.isGrounded && !over)
+            //bool isGrounded() = Physics2D.OverlapCircle(new Vector3( this.transform.position.x , this.transform.position.y, this.transform.position.z), 1.001f, groundLayer);
+            //Debug.Log(player.isGrounded());
+            if ( !player.isGrounded() && !over)
             {
                 
                handlehook(mousePos) ;
             }
             }
         }
-        if (Input.GetKeyUp(KeyCode.Mouse0) ||player.isGrounded || over ){
+        if (Input.GetKeyUp(KeyCode.Mouse0) ||player.isGrounded() || over ){
             dehook();
          }
 

@@ -82,7 +82,7 @@ public class softProto : MonoBehaviour
         segmentLength =segmentPrefab.GetComponent<Renderer>().bounds.size.y;
 
 
-        if ( player.isGrounded && hardWhenGround ){
+        if ( player.isGrounded() && hardWhenGround ){
             _distanceJoint.maxDistanceOnly = true;
         }
 
@@ -170,7 +170,7 @@ void FixedUpdate()
 
         //Debug.Log("recongised mouse Down" );
 
-        if (player.isGrounded){
+        if (player.isGrounded()){
             if (hardWhenGround){
                 Debug.Log("k");
                 turnHard(false, true,currlength);
@@ -224,7 +224,7 @@ void FixedUpdate()
                     overremeb = true;
                     //newColid = true;
         }
-        if ( !player.isGrounded){
+        if ( !player.isGrounded()){
 
             if ( !over){
                 //Debug.Log(isOnCircumference(endPoint, pointActive, this.transform.position, 2f ));
@@ -272,7 +272,7 @@ void FixedUpdate()
             }
         }
 
-        if (player.isGrounded && fitWhenGround && !softRope){
+        if (player.isGrounded() && fitWhenGround && !softRope){
             Debug.Log("apple");
             turnHard(false, true,currlength);
             currlength = Vector2.Distance(this.transform.position, endPoint);
