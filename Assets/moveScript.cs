@@ -87,7 +87,7 @@ public class Movescript : MonoBehaviour
     public void ActvieMove(InputAction.CallbackContext value)
     {
         storedDirection = value.ReadValue<Vector2>();
-        Debug.Log("applyed storedDirection: "+ storedDirection);
+        //Debug.Log("applyed storedDirection: "+ storedDirection);
         //moveVect = value.ReadValue<Vector2>();
     }
     public void DeActiveMove ( InputAction.CallbackContext value){
@@ -116,7 +116,7 @@ public class Movescript : MonoBehaviour
         if ( isGrounded){
             //Debug.Log("grounded");
             if (Mathf.Abs(storedDirection.x)> 0.1f){
-                Debug.Log("storedDirection: " + storedDirection);
+                //Debug.Log("storedDirection: " + storedDirection);
                 if (maxRunSpeed >= Mathf.Abs(rb.velocity.x)){
                     if ( !isMoving){
                     rb.velocity = new Vector2(rb.velocity.x + (initialAcceleration * storedDirection.x), rb.velocity.y);
@@ -144,6 +144,10 @@ public class Movescript : MonoBehaviour
                 //rb.velocity = new Vector2(rb.velocity.x , rb.velocity.y + jumpForce);
                 rb.velocity = new Vector2(rb.velocity.x ,  jumpForce);
                
+            }
+
+            if (storedDirection.y >0 && hooked){
+                
             }
             
 

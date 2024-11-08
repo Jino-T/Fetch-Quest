@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using Unity.Mathematics;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GrappleManager : MonoBehaviour
 {
@@ -34,16 +35,23 @@ public class GrappleManager : MonoBehaviour
     {
         controls = new GameInput();
         controls.Player.JHook.performed += _ => Hook();
+        //controls.Player.Movment.performed += cxt => InputCheak(cxt.ReadValue<Vector2>());
     }
+
+    
 
     private void OnEnable()
     {
         controls.Enable();
+        //controls.Player.Movment.performed += InputCheak; 
+        //controls.Player.Movment.canceled += DeInputCheak;
     }
 
     private void OnDisable()
     {
         controls.Disable();
+        //controls.Player.Movment.performed -= InputCheak; 
+        //controls.Player.Movment.canceled -= DeInputCheak;
     }
 
     private void Hook()
@@ -62,14 +70,36 @@ public class GrappleManager : MonoBehaviour
                 //hooked = true;
                 Vector2 hitPosition = hit.point;
                 UseSoftProto(hitPosition);
-                Debug.Log("Hook hit object position: " + hitPosition);
+                //Debug.Log("Hook hit object position: " + hitPosition);
             }
             else
             {
-                Debug.Log("No target hit in the hook direction.");
+                //Debug.Log("No target hit in the hook direction.");
             }
         }
     }
+
+    //can be use to set reset length when on the ground but its buggy --> can make soft rope go throught
+    
+    /*
+    private void InputCheak(InputAction.CallbackContext vector2)
+    {
+        if (vector2.ReadValue<Vector2>().y < 0 && hooked && playerMoveState.isGrounded   ){
+            softProto ropescript = playerObject.GetComponent<softProto>();
+            playerObject.GetComponent<softProto>().fitWhenGround = true;
+            if (ropescript.softRope && !playerObject.GetComponent<softProto>().over){
+                ropescript.turnHard(false, true);
+            }
+        }
+    }
+
+    private void DeInputCheak(InputAction.CallbackContext vector2){
+         playerObject.GetComponent<softProto>().fitWhenGround = false;
+    }
+    */
+    
+    
+
 
     private void UseSoftProto(Vector2 endPos)
     {

@@ -31,7 +31,7 @@ public class softProto : MonoBehaviour
 
     public GrappleManager grappleManager;
 
-    private bool softRope;
+    public bool softRope;
     public bool active = false;
     public bool start = false;
 
@@ -40,7 +40,7 @@ public class softProto : MonoBehaviour
     public bool fitWhenGround = false;
     private bool softSlack = false;
 
-    private bool newColid = false;
+    public bool newColid = false;
     public int coliderInRope = 2;
 
     public float scalingFactor;
@@ -69,7 +69,7 @@ public class softProto : MonoBehaviour
     Vector3 mousePosition;
     Vector3 cirPlayerPos;
 
-    private bool over;
+    public bool over;
 
     private bool overremeb = false;
 
@@ -111,7 +111,7 @@ void FixedUpdate()
 {
     // Check if the player is grounded and the rope is active
     bool over = CheckLayerOverlap(this.transform.position, endPoint, 6);
-    
+    Debug.Log(over);
     // Update startPoint position to match the player's position
     //startPoint.transform.position = player.transform.position;
     /*
@@ -236,6 +236,10 @@ void FixedUpdate()
 
             }else{}
 
+            if (softRope){
+                GetComponent<Rigidbody2D>().mass = 1;
+            }
+
         } else{
             ////Debug.Log("active");
             //Debug.Log(isOnCircumference(endPoint, pointActive, this.transform.position, 2f ));
@@ -262,6 +266,10 @@ void FixedUpdate()
             if ( fitWhenGround){
                 currlength = Vector2.Distance(this.transform.position, endPoint);
             }
+
+            if (softRope){
+                GetComponent<Rigidbody2D>().mass = 1f;
+            }
         }
 
         if (player.isGrounded && fitWhenGround && !softRope){
@@ -283,7 +291,7 @@ void FixedUpdate()
             //Debug.LogError("StartPoint and EndPoint must be assigned!");
             return;
         }
-        this.GetComponent<Rigidbody2D>().mass = 0f;
+        //this.GetComponent<Rigidbody2D>().mass = 0f;
 
         GameObject previousSegment = null;
 
@@ -391,7 +399,7 @@ void FixedUpdate()
         // Create the final joint connecting to the endPoint
         DistanceJoint2D finalJoint = previousSegment.AddComponent<DistanceJoint2D>();
         finalJoint.connectedAnchor = endPoint;
-        finalJoint.distance = 0.5f;
+        finalJoint.distance = playerHeight.y/2;
         finalJoint.maxDistanceOnly = true;
         finalJoint.autoConfigureDistance = false;
         finalJoint.GetComponent<Rigidbody2D>().mass = 0;
@@ -461,7 +469,7 @@ void ConnectPlayerToRope(GameObject playerObject, GameObject ropeEndPoint)
 
 
 
-    void turnSoft(){
+    public void turnSoft(){
         this.GetComponent<Collider2D>().isTrigger = true; // Reset collider to non-trigger
         //this.gameObject.GetComponent<Renderer>().enabled = false;
         if (!softRope){
@@ -479,7 +487,7 @@ void ConnectPlayerToRope(GameObject playerObject, GameObject ropeEndPoint)
         overremeb = true;
     }
 
-    void turnHard(bool red, bool maxdis, float dist){
+    private void turnHard(bool red, bool maxdis, float dist){
        //Debug.Log("apply dist:" + dist);
         this.GetComponent<Collider2D>().isTrigger = false; // Reset collider to non-trigger
         this.gameObject.GetComponent<Renderer>().enabled = true;
@@ -503,6 +511,33 @@ void ConnectPlayerToRope(GameObject playerObject, GameObject ropeEndPoint)
         _distanceJoint.maxDistanceOnly = true;
 
         _distanceJoint.distance = dist ;
+        //Debug.Log("_distanceJoint.distance: "+  _distanceJoint.distance);
+    }
+
+    public void turnHard(bool red, bool maxdis){
+       //Debug.Log("apply dist:" + dist);
+        this.GetComponent<Collider2D>().isTrigger = false; // Reset collider to non-trigger
+        this.gameObject.GetComponent<Renderer>().enabled = true;
+        if (softRope){
+            deleRope();
+        }
+        ////Debug.Log("bleee");
+        _lineRenderer.SetPosition(0, endPoint);
+        _lineRenderer.SetPosition(1, endPoint);
+        _distanceJoint.connectedAnchor = endPoint;
+        _distanceJoint.enabled = true;
+        _lineRenderer.enabled = true;
+        if (red && !IsMovingTowards(this.GetComponent<Rigidbody2D>(),endPoint )){
+            RedirectVelocityAlongCircle(endPoint, this.gameObject, scalingFactor);
+            Debug.Log("perfict");
+        }
+        
+        //active = true;
+        softRope = false;
+        overremeb = false;
+        _distanceJoint.maxDistanceOnly = true;
+
+        _distanceJoint.distance = currlength ;
         //Debug.Log("_distanceJoint.distance: "+  _distanceJoint.distance);
     }
 
