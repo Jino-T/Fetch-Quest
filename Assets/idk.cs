@@ -74,7 +74,7 @@ void FixedUpdate()
         grap.hooked = isActiv;
         //Debug.Log(isActiv);
         
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.K))
         {
 
             DeactivateHookConnection();
@@ -92,7 +92,7 @@ void FixedUpdate()
 
         }
 
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetMouseButtonDown(0)|| Input.GetKeyDown(KeyCode.K))
         {
 
             ActivateHookConnection(test);
