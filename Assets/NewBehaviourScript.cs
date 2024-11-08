@@ -21,9 +21,9 @@ public class SolideHook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //bool isGrounded = Physics2D.OverlapCircle(new Vector3( this.transform.position.x , this.transform.position.y, this.transform.position.z), 1.001f, groundLayer);
-        //Debug.Log(player.isGrounded);
-        if (Input.GetKeyDown(KeyCode.Mouse0) && !player.isGrounded )
+        //bool isGrounded()() = Physics2D.OverlapCircle(new Vector3( this.transform.position.x , this.transform.position.y, this.transform.position.z), 1.001f, groundLayer);
+        //Debug.Log(player.isGrounded());
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !player.isGrounded() )
         {
             Vector2 mousePos = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
             _lineRenderer.SetPosition(0, mousePos);
@@ -33,7 +33,7 @@ public class SolideHook : MonoBehaviour
             _lineRenderer.enabled = true;
             RedirectVelocityAlongCircle(mousePos, this.gameObject);
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse0) ||player.isGrounded )
+        else if (Input.GetKeyUp(KeyCode.Mouse0) ||player.isGrounded() )
         {
             _distanceJoint.enabled = false;
             _lineRenderer.enabled = false;

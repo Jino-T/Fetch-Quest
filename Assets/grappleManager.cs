@@ -27,7 +27,7 @@ public class GrappleManager : MonoBehaviour
     }
 
     private void Update() {
-        //isGrounded = GrappleManager
+        //isGrounded() = GrappleManager
     }
 
     private void Awake()
@@ -53,7 +53,7 @@ public class GrappleManager : MonoBehaviour
             //hooked = false;
             playerObject.GetComponent<softProto>().HandleMouseUp();
         }
-        else if (!hooked && !playerMoveState.isGrounded)
+        else if (!hooked && !playerMoveState.isGrounded())
         {
             Debug.DrawRay(rb.position, storedDirection * Mathf.Infinity, Color.red, 2f);
             RaycastHit2D hit = Physics2D.Raycast(rb.position, storedDirection, Mathf.Infinity, hooks);

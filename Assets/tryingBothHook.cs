@@ -67,7 +67,7 @@ public class tryingBothHook : MonoBehaviour
         _distanceJoint.maxDistanceOnly = true;
         segmentLength =segmentPrefab.GetComponent<Renderer>().bounds.size.y;
 
-        if ( player.isGrounded && hardWhenGround ){
+        if ( player.isGrounded() && hardWhenGround ){
             _distanceJoint.maxDistanceOnly = true;
         }
 
@@ -138,7 +138,7 @@ void FixedUpdate()
 
         //Debug.Log("recongised mouse Down" );
 
-        if (player.isGrounded){
+        if (player.isGrounded()){
             if (hardWhenGround){
                 //Debug.Log("k");
                 turnHard(false, true);
@@ -202,7 +202,7 @@ void FixedUpdate()
                         overremeb = true;
                         newColid = true;
             }
-            if ( !player.isGrounded){
+            if ( !player.isGrounded()){
 
                 if ( !over){
 
@@ -260,7 +260,7 @@ void FixedUpdate()
                     overremeb = true;
                 }
             }
-            if (player.isGrounded && fitWhenGround && !softRope){
+            if (player.isGrounded() && fitWhenGround && !softRope){
                 turnHard(false, true);
             }
 
