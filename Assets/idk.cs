@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -25,6 +25,8 @@ public class GrappleController : MonoBehaviour
 
     public bool isActiv = false;
 
+    public float scalingFactor;
+
     NewBetterHook.Node sentail;
 
     NewBetterHook.Node currNode;
@@ -34,6 +36,12 @@ public class GrappleController : MonoBehaviour
     NewBetterHook.Node Printrover;
 
     public GrappleManager grap;
+
+    public float ropeLength;
+
+    bool ispressed;
+
+    private SpriteRenderer spriteRenderer;
 
 
 
@@ -51,6 +59,7 @@ public class GrappleController : MonoBehaviour
         rover = currNode.GetRightNode();
         Printrover = currNode;
         
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         
         
@@ -66,6 +75,17 @@ public class GrappleController : MonoBehaviour
         }
         */
 
+        if ((Input.GetMouseButtonUp(0) || Input.GetKeyDown(KeyCode.K)) && isActiv)
+        {
+            ispressed = false;
+        }
+
+        if ((Input.GetMouseButtonDown(0)|| Input.GetKeyDown(KeyCode.K))&& !isActiv)
+        {
+            ispressed = true;
+        }
+
+
        
     }
 
@@ -74,9 +94,10 @@ void FixedUpdate()
         grap.hooked = isActiv;
         //Debug.Log(isActiv);
         
-        if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.K))
+        if (!ispressed)
         {
 
+            
             DeactivateHookConnection();
 
             /*
@@ -92,15 +113,15 @@ void FixedUpdate()
 
         }
 
-        if (Input.GetMouseButtonDown(0)|| Input.GetKeyDown(KeyCode.K))
+        if (ispressed)
         {
 
             ActivateHookConnection(test);
 
-            Debug.Log( grappleHook.GetTail().GetRightNode());
-            Debug.Log(sentail.GetRightNode());
-            Debug.Log(currNode.GetRightNode());
-            Debug.Log(currNode);
+            //Debug.Log( grappleHook.GetTail().GetRightNode());
+            //Debug.Log(sentail.GetRightNode());
+            //Debug.Log(currNode.GetRightNode());
+            //Debug.Log(currNode);
 
             /*
             if (Printrover.getName() == null){
@@ -121,6 +142,7 @@ void FixedUpdate()
 
         //    Debug.Log(grappleHook.GetTail().GetObj().name);
         if (isActiv){
+            //CheckAndAdjustDistanceSum(ropeLength);
 
         
 
@@ -134,7 +156,7 @@ void FixedUpdate()
                         6, 
                         widthCast
                     );
-                    Debug.Log(Vector2.Distance(currNode.GetObj().transform.position, rover.GetObj().transform.position));
+                    //Debug.Log(Vector2.Distance(currNode.GetObj().transform.position, rover.GetObj().transform.position));
                     
                     if (collisionPoint != null && posDistCheck((Vector2)collisionPoint, minDist)) {
                         GameObject newhingObj = Instantiate(jointPrefab, (Vector2)collisionPoint, Quaternion.identity);
@@ -162,6 +184,9 @@ void FixedUpdate()
                         if (needed == null){
                             float dist = currNode.GetObj().GetComponent<DistanceJoint2D>().distance +rover.GetObj().GetComponent<DistanceJoint2D>().distance;
                             grappleHook.popNode(rover);
+                            if (dist > ropeLength || currNode.Equals(grappleHook.GetHead()) && roverRov.Equals(grappleHook.GetTail()) ){
+                                dist = ropeLength;
+                            }
                             makeDistJpoint(currNode.GetObj(), roverRov.GetObj(), dist);
                         }
 
@@ -200,45 +225,48 @@ void FixedUpdate()
     }
 
     public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int layerIndex, float width, bool drawDebug = false)
+{
+    LayerMask layerMask = 1 << layerIndex;
+    Vector2 direction = pointB - pointA;
+    float distance = direction.magnitude;
+    Vector2 directionNormalized = direction.normalized;
+
+    // Calculate the perpendicular vector to add thickness
+    Vector2 perpendicular = Vector2.Perpendicular(directionNormalized) * (width / 2);
+
+    // Calculate the corners of the box
+    Vector2 topLeft = pointA + perpendicular;
+    Vector2 topRight = pointA - perpendicular;
+    Vector2 bottomLeft = pointB + perpendicular;
+    Vector2 bottomRight = pointB - perpendicular;
+
+    if (true)
     {
-        LayerMask layerMask = 1 << layerIndex;
-        Vector2 direction = pointB - pointA;
-        float distance = direction.magnitude;
-        Vector2 directionNormalized = direction.normalized;
-
-        // Calculate the perpendicular vector to add thickness
-        Vector2 perpendicular = Vector2.Perpendicular(directionNormalized) * (width / 2);
-
-        // Calculate the corners of the box
-        Vector2 topLeft = pointA + perpendicular;
-        Vector2 topRight = pointA - perpendicular;
-        Vector2 bottomLeft = pointB + perpendicular;
-        Vector2 bottomRight = pointB - perpendicular;
-
-        if (drawDebug)
-        {
-            // Draw the outline of the box cast
-            Debug.DrawLine(topLeft, bottomLeft, Color.red);
-            Debug.DrawLine(bottomLeft, bottomRight, Color.red);
-            Debug.DrawLine(bottomRight, topRight, Color.red);
-            Debug.DrawLine(topRight, topLeft, Color.red);
-        }
-
-        // Perform the BoxCast with the specified width
-        RaycastHit2D hit = Physics2D.BoxCast(pointA, new Vector2(width, width), 0f, directionNormalized, distance, layerMask);
-
-        if (hit.collider != null)
-        {
-            // Calculate the point along the center line at the same distance as the hit point
-            float hitDistance = Vector2.Distance(pointA, hit.point);
-            Vector2 centerLinePoint = pointA + directionNormalized * hitDistance;
-
-            return centerLinePoint;
-        }
-
-        // Return null if no collision was detected
-        return null;
+        // Draw the outline of the box cast
+        Debug.DrawLine(topLeft, bottomLeft, Color.red);
+        Debug.DrawLine(bottomLeft, bottomRight, Color.red);
+        Debug.DrawLine(bottomRight, topRight, Color.red);
+        Debug.DrawLine(topRight, topLeft, Color.red);
     }
+
+    // Perform the BoxCast with the specified width
+    RaycastHit2D hit = Physics2D.BoxCast(pointA, new Vector2(width, width), 0f, directionNormalized, distance, layerMask);
+
+    if (hit.collider != null)
+    {
+        // Print the name of the object it collides with
+        Debug.Log("Collided with: " + hit.collider.gameObject.name);
+
+        // Calculate the point along the center line at the same distance as the hit point
+        float hitDistance = Vector2.Distance(pointA, hit.point);
+        Vector2 centerLinePoint = pointA + directionNormalized * hitDistance;
+
+        return centerLinePoint;
+    }
+
+    // Return null if no collision was detected
+    return null;
+}
 
 
 
@@ -250,7 +278,9 @@ void FixedUpdate()
         if (!isActiv)
     {
 
-        
+        spriteRenderer.color = new Color(1, 0, 0);
+        ropeLength = Vector2.Distance(playerObj.gameObject.transform.position, targetHookPoint.transform.position);
+
 
         if (playerObj != null && targetHookPoint != null)
         {
@@ -291,6 +321,10 @@ void FixedUpdate()
             Printrover = currNode;
 
             Debug.Log("Grapple activated.");
+
+            if (!IsMovingTowards(playerRigidbody, targetHookPoint.transform.position)){
+                RedirectVelocityAlongCircle(targetHookPoint.transform.position, playerObj, scalingFactor);
+            }
             
 
             //playerJoint.distance = Vector2.Distance(playerObj.transform.position, targetHookPoint.transform.position);
@@ -304,6 +338,8 @@ void FixedUpdate()
     // Check if the grapple hook is active
     if (isActiv)
     {
+
+        spriteRenderer.color = new Color(1, 1, 1);
         // Reset the 'isActiv' flag
         isActiv = false;
 
@@ -394,6 +430,137 @@ void FixedUpdate()
         }
         return true; // All nodes are sufficiently far
     }
+
+
+    public bool CheckAndAdjustDistanceSum(float threshold)
+{
+    float totalDistance = 0f;
+    bool retu = false;
+
+    // Get the first node in the grapple hook (head)
+    NewBetterHook.Node point = grappleHook.GetHead();
+    NewBetterHook.Node next = point.GetRightNode();
+    
+    // Go through all the nodes in the grapple hook
+    while (!point.Equals(grappleHook.GetTail()))
+    {
+        // Get the current DistanceJoint2D
+        DistanceJoint2D joint = point.GetObj().GetComponent<DistanceJoint2D>();
+        
+        // Calculate the actual distance between the objects connected by the joint
+        Vector2 objPos = point.GetObj().transform.position;
+        Vector2 nextPos = next.GetObj().transform.position;
+        float actualDistance = Vector2.Distance(objPos, nextPos);
+
+        // Add the actual distance to the total
+        totalDistance += actualDistance;
+
+        // Move to the next node
+        point = next;
+        next = next.GetRightNode();
+    }
+
+    // Compare the total distance with the threshold
+    if (totalDistance <= threshold)
+    {
+        retu = true; // Total distance is less than or equal to the threshold
+        float difference = threshold - totalDistance;
+
+        // Adjust the head's DistanceJoint2D distance to fit the threshold
+        DistanceJoint2D headJoint = grappleHook.GetHead().GetObj().GetComponent<DistanceJoint2D>();
+        if (headJoint != null)
+        {
+            // Adjust the head's joint distance
+            headJoint.distance += difference;
+            //Debug.Log("Adjusted the head's DistanceJoint2D distance by: " + difference);
+        }
+    }
+    else
+    {
+        // If total distance exceeds threshold, no adjustment needed, just return false
+        return false; // Total distance is greater than the threshold
+    }
+
+    return retu; // Return true if the total distance is within the threshold
+}
+
+
+
+void RedirectVelocityAlongCircle(Vector2 circleCenter, GameObject playerObject, float scalingFactor)
+{
+    // Get the player's position and velocity
+    Vector2 playerPos = playerObject.transform.position;
+    Rigidbody2D playerRigidbody = playerObject.GetComponent<Rigidbody2D>();
+    Vector2 playerVelocity = playerRigidbody.velocity;
+
+    // Calculate direction to center and radius
+    Vector2 directionToCenter = playerPos - circleCenter;
+    float radius = directionToCenter.magnitude;
+
+    // Find tangent directions (clockwise and counterclockwise)
+    Vector2 tangentClockwise = new Vector2(directionToCenter.y, -directionToCenter.x).normalized;
+    Vector2 tangentCounterclockwise = new Vector2(-directionToCenter.y, directionToCenter.x).normalized;
+
+    // Determine which direction the player is moving
+    float dotClockwise = Vector2.Dot(playerVelocity.normalized, tangentClockwise);
+    float dotCounterclockwise = Vector2.Dot(playerVelocity.normalized, tangentCounterclockwise);
+    bool isClockwise = dotClockwise > dotCounterclockwise;
+
+    // Redirect velocity along the tangent
+    Vector2 newVelocity = isClockwise
+        ? tangentClockwise * playerVelocity.magnitude
+        : tangentCounterclockwise * playerVelocity.magnitude;
+
+    // Modify momentum if scaling factor is non-zero
+    if (scalingFactor != 0)
+    {
+        Debug.Log("modifyting");
+        newVelocity = ModifyMomentum(playerRigidbody, newVelocity, 1 + scalingFactor);
+    }
+
+    // Apply the new velocity to the player
+    playerRigidbody.velocity = newVelocity;
+}
+
+// Function to modify momentum using projection
+Vector2 ModifyMomentum(Rigidbody2D playerRigidbody, Vector2 targetVelocity, float scalingFactor)
+{
+    Debug.Log("working");
+
+    // Get the player's current velocity
+    Vector2 currentVelocity = playerRigidbody.velocity;
+
+    // Normalize the target velocity direction (the new tangent)
+    Vector2 normalizedTargetDir = targetVelocity.normalized;
+
+    // Project the current velocity onto the target velocity direction
+    Vector2 projectedVelocity = Vector2.Dot(currentVelocity, normalizedTargetDir) * normalizedTargetDir;
+
+    // Scale the projection to add or subtract momentum (depending on the scaling factor)
+    projectedVelocity *= scalingFactor;
+
+    // Return the updated velocity by adding the modified projection to the original velocity
+    return currentVelocity + projectedVelocity;
+}
+
+    public bool IsMovingTowards(Rigidbody2D rb, Vector2 targetPoint)
+    {
+        // Get the current position and velocity of the Rigidbody2D
+        Vector2 currentPosition = rb.position;
+        Vector2 velocity = rb.velocity;
+
+        // Calculate the direction to the target point
+        Vector2 directionToTarget = (targetPoint - currentPosition).normalized;
+
+        // Calculate the normalized velocity direction
+        Vector2 normalizedVelocity = velocity.normalized;
+
+        // Check if the velocity direction is similar to the direction to the target
+        return Vector2.Dot(normalizedVelocity, directionToTarget) > 0;
+    }
+
+
+
 
 
 

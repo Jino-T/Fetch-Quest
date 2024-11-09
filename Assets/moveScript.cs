@@ -92,7 +92,7 @@ public class Movescript : MonoBehaviour
 
         // Only return true if actually grounded, and not just close to the ground
         bool grounded = isTouchingGround && !isFalling;
-        Debug.Log("Is Grounded: " + grounded + " | Is Touching Ground: " + isTouchingGround + " | Is Falling: " + isFalling);
+        //Debug.Log("Is Grounded: " + grounded + " | Is Touching Ground: " + isTouchingGround + " | Is Falling: " + isFalling);
 
         return grounded;
     }
