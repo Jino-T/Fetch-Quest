@@ -15,7 +15,7 @@ public class GrappleController : MonoBehaviour
     public float maxJointDistance = 1.0f; // Maximum distance between nodes
 
     private NewBetterHook grappleHook;    // Instance of the hook class
-    private Camera mainCamera;
+    public Camera mainCamera;
 
     public float minDist;
 
@@ -85,6 +85,10 @@ public class GrappleController : MonoBehaviour
             ispressed = true;
         }
 
+        if (Input.GetKeyDown(KeyCode.B)){
+            Debug.Break();
+        }
+
 
        
     }
@@ -152,9 +156,9 @@ void FixedUpdate()
                 if (currNode.GetObj() != null && rover.GetObj() != null) {
                     Vector2? collisionPoint = CheckLayerOverlap(
                         currNode.GetObj().transform.position, 
-                        rover.GetObj().transform.position, 
+                        rover.GetObj().transform.position,
                         6, 
-                        widthCast
+                        widthCast, GetWorldHeight(currNode.GetObj())/2
                     );
                     //Debug.Log(Vector2.Distance(currNode.GetObj().transform.position, rover.GetObj().transform.position));
                     
@@ -179,7 +183,7 @@ void FixedUpdate()
                         currNode.GetObj().transform.position, 
                         roverRov.GetObj().transform.position, 
                         6, 
-                        widthCast);
+                        widthCast, 0f);
 
                         if (needed == null){
                             float dist = currNode.GetObj().GetComponent<DistanceJoint2D>().distance +rover.GetObj().GetComponent<DistanceJoint2D>().distance;
@@ -210,7 +214,21 @@ void FixedUpdate()
 
 
     
-    
+    public static float GetWorldHeight(GameObject gameObject)
+    {
+        // Get the renderer's bounds in world space
+        Renderer renderer = gameObject.GetComponent<Renderer>();
+        if (renderer == null)
+        {
+            Debug.LogError("The GameObject does not have a Renderer component.");
+            return 0;
+        }
+        
+        // Calculate the height by taking the difference between max and min y values of the bounds
+        float worldHeight = renderer.bounds.size.y;
+
+        return worldHeight;
+    }
 
 
 
@@ -223,8 +241,13 @@ void FixedUpdate()
         grappleHook.AddNewNode(hookPoint);
         //grappleHook.PrintNodeNames();
     }
+public static Vector2 ModifyVectorStart(Vector2 startPoint, Vector2 endPoint, float offset)
+{
+    Vector2 direction = (endPoint - startPoint).normalized;
+    return startPoint + direction * offset;
+}
 
-    public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int layerIndex, float width, bool drawDebug = false)
+public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int layerIndex, float width, float disCir)
 {
     LayerMask layerMask = 1 << layerIndex;
     Vector2 direction = pointB - pointA;
@@ -233,6 +256,8 @@ void FixedUpdate()
 
     // Calculate the perpendicular vector to add thickness
     Vector2 perpendicular = Vector2.Perpendicular(directionNormalized) * (width / 2);
+
+    pointA = ModifyVectorStart(pointA, pointB, disCir);
 
     // Calculate the corners of the box
     Vector2 topLeft = pointA + perpendicular;
@@ -267,7 +292,6 @@ void FixedUpdate()
     // Return null if no collision was detected
     return null;
 }
-
 
 
 
