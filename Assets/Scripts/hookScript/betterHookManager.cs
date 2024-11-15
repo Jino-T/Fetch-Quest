@@ -1,6 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
+
+
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -20,6 +24,7 @@ public class GrappleController : MonoBehaviour
     public float minDist;
 
     public float widthCast;
+    public float activeWidthCast;
 
     public int slj=0;
 
@@ -31,7 +36,7 @@ public class GrappleController : MonoBehaviour
 
     NewBetterHook.Node currNode;
 
-    NewBetterHook.Node rover;
+    //NewBetterHook.Node rover;
 
     NewBetterHook.Node Printrover;
 
@@ -50,17 +55,24 @@ public class GrappleController : MonoBehaviour
 
     void Start()
     {
-        //mainCamera = Camera.main;
-        CreateGrappleHook(hookPointPrefab, jointPrefab);
+        mainCamera = Camera.main;
+        
         //ActivateHookConnection(test);
 
-        sentail = grappleHook.GetTail().GetRightNode();
-        currNode = sentail.GetRightNode();
-        rover = currNode.GetRightNode();
+        grappleHook = new NewBetterHook( jointPrefab);
+        grappleHook.AddNewNode(playerObj);
+        currNode = sentail;
+
+        
+        //grappleHook = new NewBetterHook(jointPrefab);
+
+        sentail = grappleHook.getSentinel();
+        
         Printrover = currNode;
         
         spriteRenderer = GetComponent<SpriteRenderer>();
-
+        //grappleHook.AddNewNode(this.gameObject);
+        /**/
         
         
     }
@@ -90,32 +102,24 @@ public class GrappleController : MonoBehaviour
         }
 
 
-       
-    }
-
-void FixedUpdate()
-    {
+  
+        
         grap.hooked = isActiv;
         //Debug.Log(isActiv);
-        
+        /*
         if (!ispressed)
         {
 
             
             DeactivateHookConnection();
 
-            /*
-            if (Printrover.getName() == null){
-                Debug.Log(Printrover.GetObj().name);
-            }else{
-                Debug.Log(rover.getName());
-            }
-            
-            Debug.Log(Printrover.index);
-            Printrover =Printrover.GetRightNode();
             */
+            
+            
+            /*
 
         }
+
 
         if (ispressed)
         {
@@ -136,9 +140,16 @@ void FixedUpdate()
             
             Debug.Log(Printrover.index);
             Printrover =Printrover.GetRightNode();
-            */
+            
 
         }
+         */
+
+         if (Input.GetKeyDown(KeyCode.P)){
+            printList();
+         }
+
+         
 
         
 
@@ -148,30 +159,68 @@ void FixedUpdate()
         if (isActiv){
             //CheckAndAdjustDistanceSum(ropeLength);
 
-        
+            NewBetterHook.Node rover = currNode.GetRightNode();
 
-            if (!rover.Equals(sentail) && !currNode.Equals(sentail)  ) {
+            if (!rover.Equals(sentail) && !currNode.Equals(sentail) && !currNode.Equals(grappleHook.GetTail())&& !rover.Equals(grappleHook.GetHead())) {
 
 
                 if (currNode.GetObj() != null && rover.GetObj() != null) {
-                    Vector2? collisionPoint = CheckLayerOverlap(
+                    Vector2? collisionPoint;
+                    if (currNode.Equals(grappleHook.GetHead())){
+
+                        collisionPoint = CheckLayerOverlap(
                         currNode.GetObj().transform.position, 
                         rover.GetObj().transform.position,
                         6, 
-                        widthCast, GetWorldHeight(currNode.GetObj())/2
-                    );
+                        widthCast, GetWorldHeight(currNode.GetObj())/2,  GetWorldHeight(rover.GetObj())/2, true);
+                    }else{
+                        collisionPoint = CheckLayerOverlap(
+                        currNode.GetObj().transform.position, 
+                        rover.GetObj().transform.position,
+                        6, 
+                        activeWidthCast, GetWorldHeight(currNode.GetObj())/2, GetWorldHeight(rover.GetObj())/2, true);
+                        
+
+                    }
+                    if ( collisionPoint != null){
+                        Debug.Log(currNode.GetObj().name);
+                    }
+                    
+                    
                     //Debug.Log(Vector2.Distance(currNode.GetObj().transform.position, rover.GetObj().transform.position));
                     
                     if (collisionPoint != null && posDistCheck((Vector2)collisionPoint, minDist)) {
-                        GameObject newhingObj = Instantiate(jointPrefab, (Vector2)collisionPoint, Quaternion.identity);
-                        NewBetterHook.Node sllk = grappleHook.AddNewNode(currNode, rover, newhingObj);
-                        sllk.GetObj().name = sllk.GetObj().name + slj;
-                        slj = slj+1;
-
-                        Debug.Log(currNode.GetObj().name + ", " + sllk.GetObj().name + ", " + rover.GetObj().name);
                         
-                        makeDistJpoint(currNode.GetObj(), newhingObj);
-                        makeDistJpoint(newhingObj, rover.GetObj());
+                        Vector2 directionNormalized = (currNode.GetObj().transform.position- rover.GetObj().transform.position).normalized;
+                        Vector2 offset = directionNormalized * (jointPrefab.GetComponent<Renderer>().bounds.size.x) ;
+
+                        Vector2 point1 = (Vector2)collisionPoint + offset;
+                        Vector2 point2 = (Vector2)collisionPoint - offset;
+
+                        if( grappleHook.count == 2){
+                            NewBetterHook.Node createdNode =makeHing(currNode,rover, (Vector2)collisionPoint );
+                            makeHing(createdNode.GetLeftNode(),createdNode,point1);
+                            makeHing(createdNode, createdNode.GetRightNode(),point2);
+                            currNode = createdNode;
+                            rover = currNode.GetRightNode();
+
+                            /*
+
+                            NewBetterHook.Node createdNode =makeHing(currNode,rover, (Vector2)collisionPoint );
+                            makeHing(createdNode.GetLeftNode(),createdNode,point2);
+                            makeHing(createdNode, createdNode.GetRightNode(),point1);
+                            currNode = createdNode;
+                            rover = currNode.GetRightNode();
+                            
+                            */
+
+                        }else{
+                            makeHing(currNode,rover, (Vector2)collisionPoint );
+                        }
+                        
+                        
+                        
+
 
 
                     } 
@@ -179,15 +228,19 @@ void FixedUpdate()
                     NewBetterHook.Node roverRov = rover.GetRightNode();
 
                     if (roverRov.GetObj() != null){
+
                         Vector2? needed = CheckLayerOverlap(
                         currNode.GetObj().transform.position, 
                         roverRov.GetObj().transform.position, 
                         6, 
-                        widthCast, 0f);
+                        widthCast, 0f, false);
 
-                        if (needed == null){
+                        if (needed == null && grappleHook.count > 3 && rover.GetObj().GetComponent<DistanceJoint2D>() != null){
                             float dist = currNode.GetObj().GetComponent<DistanceJoint2D>().distance +rover.GetObj().GetComponent<DistanceJoint2D>().distance;
                             grappleHook.popNode(rover);
+                            if ( !rover.Equals(grappleHook.GetHead()) && !rover.Equals(grappleHook.GetTail())){
+                                Destroy(rover.GetObj());
+                            }
                             if (dist > ropeLength || currNode.Equals(grappleHook.GetHead()) && roverRov.Equals(grappleHook.GetTail()) ){
                                 dist = ropeLength;
                             }
@@ -205,10 +258,38 @@ void FixedUpdate()
                 }
                 
             }
+
+
+           
+
+
+
             currNode = currNode.GetRightNode();
-            rover = currNode.GetRightNode();
+            
         }
     }
+
+    private NewBetterHook.Node makeHing( NewBetterHook.Node left,  NewBetterHook.Node  right, Vector2 point ){
+        Debug.Log("creating new node");
+        GameObject newhingObj = Instantiate(jointPrefab, point, Quaternion.identity);
+        NewBetterHook.Node sllk = grappleHook.AddNewNode(left, right, newhingObj);
+        sllk.GetObj().name = sllk.GetObj().name + slj;
+        slj = slj+1;
+
+        Debug.Log(left.GetObj().name + ", " + sllk.GetObj().name + ", " + right.GetObj().name);
+        
+        makeDistJpoint(left.GetObj(), newhingObj);
+        makeDistJpoint(newhingObj, right.GetObj());
+        return sllk;
+    }
+
+    private Vector2 idk(Vector2 collisionPoint, Vector2 currPoz){
+        Vector2 direction = (collisionPoint - currPoz).normalized;
+        return direction * 20;
+        
+
+    }
+    
 
 
 
@@ -231,27 +312,66 @@ void FixedUpdate()
     }
 
 
-
+/*
 
     public void CreateGrappleHook(GameObject hookPoint, GameObject jointPrefab)
     {
-        grappleHook = new NewBetterHook(  jointPrefab);
-        grappleHook.AddNewNode(playerObj);
-        //grappleHook.PrintNodeNames();
-        grappleHook.AddNewNode(hookPoint);
-        //grappleHook.PrintNodeNames();
+        if (isActiv){
+            currNode = sentail.GetRightNode();
+            //rover = currNode.GetRightNode();
+            
+        }else{
+            grappleHook = new NewBetterHook( jointPrefab);
+            grappleHook.AddNewNode(playerObj);
+            //grappleHook.PrintNodeNames();
+            //grappleHook.AddNewNode(hookPoint);
+            //grappleHook.PrintNodeNames();
+            currNode = sentail.GetRightNode();
+            //this.ActivateHookConnection(hookPoint);
+            
+
+        }
+        
+        
+
+        
     }
+
+     public void CreateGrappleHook( GameObject jointPrefab)
+    {
+        if (isActiv){
+            currNode = sentail.GetRightNode();
+            
+            
+        }else{
+            grappleHook = new NewBetterHook( jointPrefab);
+            grappleHook.AddNewNode(playerObj);
+            //grappleHook.PrintNodeNames();
+            //grappleHook.AddNewNode(hookPoint);
+            //grappleHook.PrintNodeNames();
+            currNode = sentail.GetRightNode();
+            //rover = currNode.GetRightNode();
+
+        }
+        
+        
+
+        
+    }
+
+
+    */
 public static Vector2 ModifyVectorStart(Vector2 startPoint, Vector2 endPoint, float offset)
 {
     Vector2 direction = (endPoint - startPoint).normalized;
     return startPoint + direction * offset;
 }
 
-public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int layerIndex, float width, float disCir)
+public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int layerIndex, float width, float disCir, bool draw)
 {
     LayerMask layerMask = 1 << layerIndex;
     Vector2 direction = pointB - pointA;
-    float distance = direction.magnitude;
+    float distance = Vector2.Distance(pointA, pointB) - disCir;
     Vector2 directionNormalized = direction.normalized;
 
     // Calculate the perpendicular vector to add thickness
@@ -265,13 +385,65 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
     Vector2 bottomLeft = pointB + perpendicular;
     Vector2 bottomRight = pointB - perpendicular;
 
-    if (true)
+    if (draw)
     {
         // Draw the outline of the box cast
         Debug.DrawLine(topLeft, bottomLeft, Color.red);
         Debug.DrawLine(bottomLeft, bottomRight, Color.red);
         Debug.DrawLine(bottomRight, topRight, Color.red);
         Debug.DrawLine(topRight, topLeft, Color.red);
+
+        
+    }
+
+    // Perform the BoxCast with the specified width
+    RaycastHit2D hit = Physics2D.BoxCast(pointA, new Vector2(width, width), 0f, directionNormalized, distance, layerMask);
+
+    if (hit.collider != null)
+    {
+        // Print the name of the object it collides with
+        Debug.Log("Collided with: " + hit.collider.gameObject.name);
+
+        // Calculate the point along the center line at the same distance as the hit point
+        float hitDistance = Vector2.Distance(pointA, hit.point);
+        Vector2 centerLinePoint = pointA + directionNormalized * hitDistance;
+
+        return centerLinePoint;
+    }
+
+    // Return null if no collision was detected
+    return null;
+}
+
+
+public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int layerIndex, float width, float disStartCir, float disEndCir, bool draw)
+{
+    LayerMask layerMask = 1 << layerIndex;
+    Vector2 direction = pointB - pointA;
+    float distance = Vector2.Distance(pointA, pointB) - (disEndCir+ disStartCir);
+    Vector2 directionNormalized = direction.normalized;
+
+    // Calculate the perpendicular vector to add thickness
+    Vector2 perpendicular = Vector2.Perpendicular(directionNormalized) * (width / 2);
+
+    pointA = ModifyVectorStart(pointA, pointB, disStartCir);
+    pointB = ModifyVectorStart ( pointA, pointB, disEndCir);
+
+    // Calculate the corners of the box
+    Vector2 topLeft = pointA + perpendicular;
+    Vector2 topRight = pointA - perpendicular;
+    Vector2 bottomLeft = pointB + perpendicular;
+    Vector2 bottomRight = pointB - perpendicular;
+
+    if (draw)
+    {
+        // Draw the outline of the box cast
+        Debug.DrawLine(topLeft, bottomLeft, Color.red);
+        Debug.DrawLine(bottomLeft, bottomRight, Color.red);
+        Debug.DrawLine(bottomRight, topRight, Color.red);
+        Debug.DrawLine(topRight, topLeft, Color.red);
+
+        
     }
 
     // Perform the BoxCast with the specified width
@@ -301,9 +473,19 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
     {
         if (!isActiv)
     {
+        //CreateGrappleHook(this.gameObject, targetHookPoint);
+        //grappleHook.AddNewNode(targetHookPoint);
 
         spriteRenderer.color = new Color(1, 0, 0);
         ropeLength = Vector2.Distance(playerObj.gameObject.transform.position, targetHookPoint.transform.position);
+
+         printList();
+        
+        grappleHook.AddNewNode(targetHookPoint);
+
+        Debug.Log( "///////");
+
+         printList();
 
 
         if (playerObj != null && targetHookPoint != null)
@@ -340,7 +522,7 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
 
             sentail = grappleHook.GetTail().GetRightNode();
             currNode = sentail.GetRightNode();
-            rover = currNode.GetRightNode();
+            //rover = currNode.GetRightNode();
 
             Printrover = currNode;
 
@@ -375,10 +557,17 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
         }
 
         // Optionally, you can disable the DistanceJoint2D on other nodes if needed
-        NewBetterHook.Node point = grappleHook.GetHead().GetRightNode();
+        NewBetterHook.Node point = grappleHook.getSentinel().GetRightNode().GetRightNode();
         NewBetterHook.Node next = point.GetRightNode();
-        while (!point.Equals(grappleHook.GetHead()) && !point.Equals(grappleHook.GetTail()) ){
+        while (!point.Equals(grappleHook.GetHead()) && !point.Equals(grappleHook.getSentinel())  ){
+            
+            
+            if ( !point.Equals(grappleHook.GetTail())  ){
+                Destroy(point.GetObj());
+            }
             grappleHook.popNode(point);
+            
+            
             point = next;
             next = next.GetRightNode();
 
@@ -387,9 +576,9 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
 
         // Optionally, reset other variables or states related to the grapple hook
         // For example, if you want to clear out any node references or reset node positions
-        sentail = null;
-        currNode = null;
-        rover = null;
+        //sentail = null;
+        currNode = grappleHook.GetHead();
+        //rover = grappleHook.GetTail();
         Printrover = null;
 
         Debug.Log("Grapple deactivated.");
@@ -582,6 +771,24 @@ Vector2 ModifyMomentum(Rigidbody2D playerRigidbody, Vector2 targetVelocity, floa
         // Check if the velocity direction is similar to the direction to the target
         return Vector2.Dot(normalizedVelocity, directionToTarget) > 0;
     }
+
+    void printList()
+{
+    // Iterates through each node using the IterateNodes() method.
+    foreach (NewBetterHook.Node node in grappleHook.IterateNodes())
+    {
+        // Check if the node has a name in the object.
+        if (node.GetObj() != null && node.GetObj().name != null)
+        {
+            Debug.Log(node.GetObj().name);
+        }
+        else
+        {
+            Debug.Log(node.getName());
+        }
+    }
+}
+
 
 
 

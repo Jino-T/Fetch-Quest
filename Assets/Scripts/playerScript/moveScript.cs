@@ -101,7 +101,7 @@ public class Movescript : MonoBehaviour
     public void ActiveMove(InputAction.CallbackContext value)
     {
         storedDirection = value.ReadValue<Vector2>();
-        Debug.Log("applied storedDirection: " + storedDirection);
+        //Debug.Log("applied storedDirection: " + storedDirection);
     }
     
     public void DeActiveMove(InputAction.CallbackContext value)
@@ -117,7 +117,7 @@ public class Movescript : MonoBehaviour
             jumpHoldTimer = 0f;
             rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Initial jump force
             isSliding = false; // Stop sliding if player jumps
-            Debug.Log("Jump initiated. Sliding stopped.");
+            //Debug.Log("Jump initiated. Sliding stopped.");
         }
     }
 
@@ -215,7 +215,7 @@ public class Movescript : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + jumpHoldForce * Time.fixedDeltaTime);
             jumpHoldTimer += Time.fixedDeltaTime;
-            Debug.Log("Jump held. Hold timer: " + jumpHoldTimer);
+            //Debug.Log("Jump held. Hold timer: " + jumpHoldTimer);
         }
     }
 }
