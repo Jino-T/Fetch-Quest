@@ -7,7 +7,8 @@ public class NewBetterHook : MonoBehaviour
     public GameObject ropeHingObj; // Assign this in the Inspector or via constructor.
 
     private Node sentinel;
-    
+
+    public int count = 0;
 
     public class Node
     {
@@ -83,9 +84,43 @@ public class NewBetterHook : MonoBehaviour
         }
     }
 
+
     public NewBetterHook( GameObject jointPrefab)
     {
         ropeHingObj = jointPrefab;
+        sentinel = new Node(null);
+        sentinel.setName("sentinel");
+        
+    }
+
+    public NewBetterHook( GameObject head,GameObject jointPrefab)
+    {
+
+        ropeHingObj = jointPrefab;
+        sentinel = new Node(null);
+
+        sentinel.setName("sentinel");
+        this.AddNewNode(head);
+        
+        
+    }
+
+     public NewBetterHook( GameObject head, GameObject tail ,GameObject jointPrefab)
+    {
+
+        ropeHingObj = jointPrefab;
+        sentinel = new Node(null);
+
+        sentinel.setName("sentinel");
+        this.AddNewNode(head);
+        this.AddNewNode(tail);
+        
+    }
+
+    
+    public NewBetterHook()
+    {
+        
         sentinel = new Node(null);
         sentinel.setName("sentinel");
         
@@ -111,6 +146,7 @@ public class NewBetterHook : MonoBehaviour
 
 public Node AddNewNode(Node leftNode, Node rightNode, Vector2 collisionPoint)
 {
+    count += 1;
     if (leftNode == null || rightNode == null) return null;
 
     GameObject thisObj = Instantiate(ropeHingObj, collisionPoint, Quaternion.identity);
@@ -125,6 +161,7 @@ public Node AddNewNode(Node leftNode, Node rightNode, Vector2 collisionPoint)
 
 public Node AddNewNode(Node leftNode, Node rightNode, GameObject collisionPoint)
 {
+    count +=1;
     if (leftNode == null || rightNode == null || collisionPoint == null) return null;
 
     Node newNode = new Node(leftNode, rightNode, collisionPoint);
@@ -137,6 +174,7 @@ public Node AddNewNode(Node leftNode, Node rightNode, GameObject collisionPoint)
 
 public Node AddNewNode(Node leftNode, Node rightNode)
 {
+    count += 1;
     if (leftNode == null || rightNode == null) return null;
 
     Node newNode = new Node(leftNode, rightNode, ropeHingObj);
@@ -147,8 +185,14 @@ public Node AddNewNode(Node leftNode, Node rightNode)
     return newNode;
 }
 
+public Node getSentinel(){
+    return sentinel;
+}
+
 public Node AddNewNode(GameObject positionObj)
 {
+
+    count += 1;
     if (positionObj == null) return null;
 
     Node newNode = new Node(positionObj);
@@ -163,12 +207,22 @@ public Node AddNewNode(GameObject positionObj)
     }
     else
     {
+        /*
+        Node head = sentail.GetRightNode();
+        newNode.SetNodeRight(head);
+        newNode.SetNodeLeft(sentinel);
+        head.SetNodeLeft(newNode);
+        sentail.SetNodeRight(newNode);
+        */
+
         // Add to the end of the list
+        
         Node tail = sentinel.GetLeftNode();
         newNode.SetNodeLeft(tail);
         newNode.SetNodeRight(sentinel);
         tail.SetNodeRight(newNode);
         sentinel.SetNodeLeft(newNode);
+        
     }
 
     return newNode;
@@ -202,6 +256,7 @@ private void LinkNeighbors(Node leftNode, Node newNode, Node rightNode)
 
 public float popNode(Node newNode)
 {
+    count -=1;
     Node leftNode = newNode.GetLeftNode();
     Node rightNode = newNode.GetRightNode();
     float dist = 0f;
@@ -225,7 +280,7 @@ public float popNode(Node newNode)
             dist = newJoint.distance + leftJoint.distance ;
         }
 
-        Destroy(newNode.GetObj());
+        //Destroy(newNode.GetObj());
     }
 
     // Nullify the newNode's links (not strictly necessary, but for clarity)

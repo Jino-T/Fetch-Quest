@@ -13,6 +13,12 @@ public class GrappleManager : MonoBehaviour
     public bool hooked;
     public bool mouseAct = false;
 
+    public float distHook;
+
+    public float widthHook;
+
+    public GameObject jointPrefab;
+
     private Vector2 storedDirection;
     public LayerMask hooks;
 
@@ -21,89 +27,199 @@ public class GrappleManager : MonoBehaviour
     public Movescript playerMoveState; // Updated from Movescript to PlayerMovement
     public GameObject playerObject;
 
+    private float boxCastDuration = 3f; // Duration of the BoxCast
+    public float boxCastTimer = 0f; // Timer to track the BoxCast duration
+    private bool isBoxCasting = false; // Flag to track whether BoxCast is active
+
+    // LineRenderer to visualize the BoxCast
+    private LineRenderer lineRenderer;
+
+
     private void Start()
     {
+
         rb = playerObject.GetComponent<Rigidbody2D>();
-        playerObject.GetComponent<softProto>().mouseAct = mouseAct;
+        //playerObject.GetComponent<softProto>().mouseAct = mouseAct;
+
+        //playerObject.GetComponent<GrappleController>().CreateGrappleHook( jointPrefab);
+
+        // Set up the LineRenderer
+        lineRenderer = playerObject.AddComponent<LineRenderer>();
+        lineRenderer.positionCount = 5; // 4 points for the box corners, and 1 to close the loop
+        lineRenderer.startWidth = 0.05f;
+        lineRenderer.endWidth = 0.05f;
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.startColor = Color.red;
+        lineRenderer.endColor = Color.red;
     }
 
-    private void Update() {
+        private void OnEnable()
+    {
+        controls.Enable();
+        controls.Player.Movement.performed += InputCheak; 
+        controls.Player.Movement.canceled += DeInputCheak;
+
+        
+    }
+
+    private void OnDisable()
+    {
+        controls.Disable();
+        controls.Player.Movement.performed -= InputCheak; 
+        controls.Player.Movement.canceled -= DeInputCheak;
+    }
+
+    
+
+    private void Update()
+    {
+        //lineRenderer = playerObject.AddComponent<LineRenderer>();
+        //playerMoveState.isGrounded();
         //isGrounded() = GrappleManager
+        // Update BoxCast timer if active
+        if (isBoxCasting)
+        {
+            boxCastTimer += Time.deltaTime;
+            if (boxCastTimer >= boxCastDuration)
+            {
+                isBoxCasting = false; // Stop casting after duration
+            }
+
+            // Draw the BoxCast visualization
+            DrawBoxCast();
+        }
     }
 
     private void Awake()
     {
         controls = new GameInput();
         controls.Player.JHook.performed += _ => Hook();
-        //controls.Player.Movment.performed += cxt => InputCheak(cxt.ReadValue<Vector2>());
     }
 
-    
-
-    private void OnEnable()
+    private void InputCheak(InputAction.CallbackContext value)
     {
-        controls.Enable();
-        //controls.Player.Movment.performed += InputCheak; 
-        //controls.Player.Movment.canceled += DeInputCheak;
+        storedDirection = value.ReadValue<Vector2>();
     }
 
-    private void OnDisable()
-    {
-        controls.Disable();
-        //controls.Player.Movment.performed -= InputCheak; 
-        //controls.Player.Movment.canceled -= DeInputCheak;
+    private void DeInputCheak(InputAction.CallbackContext value){
+         
+         storedDirection = Vector2.zero;
     }
+
+
+
 
     private void Hook()
-    {
+    { //Debug.Log("hooking");
         if (hooked)
         {
-            //hooked = false;
-            playerObject.GetComponent<softProto>().HandleMouseUp();
+            playerObject.GetComponent<GrappleController>().DeactivateHookConnection();
+            hooked =  false;
         }
         else if (!hooked && !playerMoveState.isGrounded())
         {
-            Debug.DrawRay(rb.position, storedDirection * Mathf.Infinity, Color.red, 2f);
-            RaycastHit2D hit = Physics2D.Raycast(rb.position, storedDirection, Mathf.Infinity, hooks);
+            // Start the BoxCast for 3 seconds
+            StartBoxCast();
+            RaycastHit2D hit = PerformBoxCast();
+
+            // Perform BoxCast after 3 seconds
+            if (isBoxCasting && hit.collider == null)
+            {
+                // Debug.DrawRay(rb.position, storedDirection * Mathf.Infinity, Color.red, 2f);
+
+                hit = PerformBoxCast();
+                if ( hit.collider != null){
+                    Debug.Log(hit.collider.gameObject.name);
+                }else{
+                    Debug.Log("miss");
+                }
+                
+                 
+
+                
+            }
+
             if (hit.collider != null)
-            {
-                //hooked = true;
-                Vector2 hitPosition = hit.point;
-                UseSoftProto(hitPosition);
-                //Debug.Log("Hook hit object position: " + hitPosition);
-            }
-            else
-            {
-                //Debug.Log("No target hit in the hook direction.");
-            }
+                {
+                    Debug.Log(hit.collider.gameObject.name);
+                    GameObject hitPosition = hit.collider.gameObject;
+                   
+                    actHook(hitPosition);
+                    hooked =true;
+                }
         }
     }
 
-    //can be use to set reset length when on the ground but its buggy --> can make soft rope go throught
-    
-    /*
-    private void InputCheak(InputAction.CallbackContext vector2)
+    // Start the BoxCast duration timer
+    private void StartBoxCast()
     {
-        if (vector2.ReadValue<Vector2>().y < 0 && hooked && playerMoveState.isGrounded   ){
-            softProto ropescript = playerObject.GetComponent<softProto>();
-            playerObject.GetComponent<softProto>().fitWhenGround = true;
-            if (ropescript.softRope && !playerObject.GetComponent<softProto>().over){
-                ropescript.turnHard(false, true);
-            }
-        }
+        boxCastTimer = 0f; // Reset timer
+        isBoxCasting = true; // Start casting
+        //Debug.Log("somthings");
     }
 
-    private void DeInputCheak(InputAction.CallbackContext vector2){
-         playerObject.GetComponent<softProto>().fitWhenGround = false;
+    // Perform a BoxCast and return the hit result
+    private RaycastHit2D PerformBoxCast()
+    {
+        //Debug.Log("dik");
+        // Define the width and height of the box for the BoxCast
+        //float width = 2f; // Set as needed for the width of the box
+        //float height = 1f; // Set as needed for the height of the box
+
+        // Perform the BoxCast using stored direction and size
+        RaycastHit2D hit = Physics2D.BoxCast(rb.position, new Vector2(widthHook, widthHook), 0f, storedDirection,distHook, hooks);
+        return hit;
     }
-    */
-    
-    
 
-
-    private void UseSoftProto(Vector2 endPos)
+    private void actHook(GameObject endPos)
     {
         Debug.Log("Using Soft Proto Hook");
-        playerObject.GetComponent<softProto>().HandleMouseDown(endPos);
+        
+        
+        playerObject.GetComponent<GrappleController>().ActivateHookConnection(endPos);
     }
+
+    // Visualize the BoxCast with a LineRenderer
+    private void DrawBoxCast()
+{
+    if (lineRenderer == null)
+    {
+        lineRenderer = playerObject.AddComponent<LineRenderer>();
+        lineRenderer.positionCount = 5; // 4 points for the box corners, and 1 to close the loop
+        lineRenderer.startWidth = 0.05f;
+        lineRenderer.endWidth = 0.05f;
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.startColor = Color.red;
+        lineRenderer.endColor = Color.red;
+       
+        
+    }
+
+    if (rb == null)
+    {
+        Debug.LogError("Rigidbody2D is not assigned!");
+        return;
+    }
+
+    // Define the width and height of the box for the BoxCast
+    float width = 2f;
+    float height = 1f;
+
+    // Get the corners of the BoxCast rectangle
+    Vector2 boxCenter = rb.position;
+    Vector2[] corners = new Vector2[4];
+
+    corners[0] = boxCenter + storedDirection * 4f + new Vector2(width / 2, height / 2);
+    corners[1] = boxCenter + storedDirection * 4f + new Vector2(-width / 2, height / 2);
+    corners[2] = boxCenter + storedDirection * 4f + new Vector2(-width / 2, -height / 2);
+    corners[3] = boxCenter + storedDirection * 4f + new Vector2(width / 2, -height / 2);
+
+    // Set the positions of the LineRenderer
+    lineRenderer.SetPosition(0, corners[0]);
+    lineRenderer.SetPosition(1, corners[1]);
+    lineRenderer.SetPosition(2, corners[2]);
+    lineRenderer.SetPosition(3, corners[3]);
+    lineRenderer.SetPosition(4, corners[0]); // Close the loop
+}
+
 }
