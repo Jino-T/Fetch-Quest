@@ -35,7 +35,7 @@ public class CameraFollow : MonoBehaviour
             targetPosition.z = mainCamera.transform.position.z; // Keep the z-position constant
 
             // Adjust damping time dynamically
-            float dampingTime = isLeft ? smoothSpeed * 1.3f : smoothSpeed;
+            //float dampingTime = isLeft ? smoothSpeed * 1.3f : smoothSpeed;
 
             if (isLeft){
 
@@ -52,7 +52,7 @@ public class CameraFollow : MonoBehaviour
                 mainCamera.transform.position,
                 targetPosition,
                 ref rightCurrentVelocity,
-                dampingTime);
+                smoothSpeed);
             }
             // Smoothly transition to the target position using SmoothDamp
             
