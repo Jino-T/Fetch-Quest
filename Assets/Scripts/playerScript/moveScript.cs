@@ -33,7 +33,7 @@ public class Movescript : MonoBehaviour
     public GrappleManager grappleManager;
     public Rigidbody2D rb;
 
-    private GameInput controls;
+    private GameInput1 controls;
 
     public LayerMask groundLayer;
     public float groundCheckRadius = 2f;
@@ -46,7 +46,7 @@ public class Movescript : MonoBehaviour
 
     private void Awake()
     {
-        controls = new GameInput();
+        controls = new GameInput1();
     }
 
     private void Start()

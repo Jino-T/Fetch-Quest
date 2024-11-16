@@ -23,7 +23,7 @@ public class GrappleManager : MonoBehaviour
     public LayerMask hooks;
 
     private Rigidbody2D rb;
-    private GameInput controls;
+    private GameInput1 controls;
     public Movescript playerMoveState; // Updated from Movescript to PlayerMovement
     public GameObject playerObject;
 
@@ -92,7 +92,7 @@ public class GrappleManager : MonoBehaviour
 
     private void Awake()
     {
-        controls = new GameInput();
+        controls = new GameInput1();
         controls.Player.JHook.performed += _ => Hook();
     }
 
