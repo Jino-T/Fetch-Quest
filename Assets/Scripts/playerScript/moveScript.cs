@@ -202,11 +202,13 @@ public class Movescript : MonoBehaviour
         float clampedXVelocity = Mathf.Clamp(rb.velocity.x, -maxAirSpeed, maxAirSpeed);
         rb.velocity = new Vector2(clampedXVelocity, rb.velocity.y);
 
-        // Apply air drag only if there’s no input, for smoother airborne control
+        // Apply air drag only if there’s no input, and if not hooked for smoother airborne control
+
         if (Mathf.Abs(storedDirection.x) < 0.1f)
         {
             rb.velocity = new Vector2(rb.velocity.x - (airDrag * Mathf.Sign(rb.velocity.x)), rb.velocity.y);
         }
+
     }
 
     private void HandleJump()
