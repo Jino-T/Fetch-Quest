@@ -744,6 +744,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7329536200621617185, guid: f0983128baf19802981959de7065c53c, type: 3}
+      propertyPath: nextScene
+      value: Level1
+      objectReference: {fileID: 0}
     - target: {fileID: 7991379795963782417, guid: f0983128baf19802981959de7065c53c, type: 3}
       propertyPath: m_Name
       value: Door
@@ -2506,7 +2510,8 @@ MonoBehaviour:
     m_Bits: 512
   playerMoveState: {fileID: 1285619687}
   playerObject: {fileID: 1900261311}
-  boxCastTimer: 0
+  boxCastDuration: 3
+  lineRenderer: {fileID: 0}
 --- !u!4 &1285619689
 Transform:
   m_ObjectHideFlags: 0
@@ -2867,14 +2872,15 @@ MonoBehaviour:
   hooked: 0
   mouseAct: 1
   distHook: 5
-  widthHook: 3
+  widthHook: 2
   jointPrefab: {fileID: 2922789774956722926, guid: 255e1d993372d4b3c8b87be728c50db8, type: 3}
   hooks:
     serializedVersion: 2
     m_Bits: 512
   playerMoveState: {fileID: 1900261315}
   playerObject: {fileID: 1900261311}
-  boxCastTimer: 0.03
+  boxCastDuration: 3
+  lineRenderer: {fileID: 1900261319}
 --- !u!114 &1900261315
 MonoBehaviour:
   m_ObjectHideFlags: 0
