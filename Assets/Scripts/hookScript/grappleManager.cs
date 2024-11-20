@@ -82,7 +82,7 @@ public class GrappleManager : MonoBehaviour
         lineRenderer.startWidth =widthHook;
         lineRenderer.endWidth =widthHook;
 
-        if (playerMoveState.isGrounded() && !hooked){
+        if (playerMoveState.conSidedGround && !hooked){
             StopBoxCast();
         }
 
@@ -115,10 +115,16 @@ public class GrappleManager : MonoBehaviour
                 }
                 if (hit.collider != null){
                     Debug.Log(hit.collider.gameObject.name);
-                    hookedPoz = hit.point;
-                    lineRenderer.SetPosition(1, hit.point);
+                    if ( hit.collider.gameObject.GetComponent<Rigidbody2D>() == null){
+                        Rigidbody2D collidRigd = hit.collider.gameObject.AddComponent<Rigidbody2D>();
+                        collidRigd.freezeRotation= true;
+                        collidRigd.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
+                        
+                    }
+                    lineRenderer.SetPosition(1, hit.collider.gameObject.GetComponent<Rigidbody2D>().transform.position);
                 
                     GameObject hitPosition = hit.collider.gameObject;
+                    hookedPoz = hit.collider.gameObject.GetComponent<Rigidbody2D>().transform.position;
                 
                     actHook(hitPosition);
                     hooked =true;
@@ -164,7 +170,7 @@ public class GrappleManager : MonoBehaviour
             playerObject.GetComponent<GrappleController>().DeactivateHookConnection();
             hooked =  false;
         }
-        else if (!hooked && !playerMoveState.isGrounded() && !isBoxCasting )
+        else if (!hooked && !playerMoveState.conSidedGround && !isBoxCasting )
         {
             // Start the BoxCast for 3 seconds
             hookcastDir = storedDirection.normalized;

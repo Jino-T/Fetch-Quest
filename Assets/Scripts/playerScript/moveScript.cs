@@ -44,6 +44,13 @@ public class Movescript : MonoBehaviour
     private bool slideRequested = false;
     private float jumpHoldTimer = 0f;
 
+
+    // cytotec time
+
+    public int cytotecFames;
+    private int currCFames =0;
+    public bool conSidedGround = false;
+
     private void Awake()
     {
         controls = new GameInput1();
@@ -81,6 +88,21 @@ public class Movescript : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isGrounded()){
+            conSidedGround = true;
+            currCFames = cytotecFames;
+        }else{
+            if (currCFames >0 && conSidedGround){
+                currCFames -= 1;
+                conSidedGround =true;
+
+            }else{
+                conSidedGround =false;
+            }
+            
+        }
+        
+
         HandleMovement();
     }
 
@@ -111,8 +133,9 @@ public class Movescript : MonoBehaviour
 
     public void ActiveJump(InputAction.CallbackContext context)
     {
-        if (isGrounded() || isSliding)
+        if (conSidedGround || isSliding)
         {
+            conSidedGround = false;
             activeJump = true;
             jumpHoldTimer = 0f;
             rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Initial jump force
