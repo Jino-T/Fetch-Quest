@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -20,7 +21,7 @@ public class Movescript : MonoBehaviour
 
     public float jumpFloat;
     
-    public Transform groundCheckPoint;
+    public GameObject groundCheckPoint;
     public float maxAirSpeed;
     public float maxRunSpeed;
     public float minSpeed;
@@ -40,6 +41,8 @@ public class Movescript : MonoBehaviour
     public Vector2 groundCheckOffset = new Vector2(0, -0.5f);
 
     private Vector2 storedDirection = Vector2.zero;
+
+    public bool isJumping = false;
     private bool activeJump = false;
     private bool slideRequested = false;
     private float jumpHoldTimer = 0f;
@@ -88,35 +91,52 @@ public class Movescript : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isGrounded()){
-            conSidedGround = true;
-            currCFames = cytotecFames;
-        }else{
-            if (currCFames >0 && conSidedGround){
-                currCFames -= 1;
-                conSidedGround =true;
+        bool grounded = isGrounded();
 
-            }else{
-                conSidedGround =false;
-            }
-            
-        }
-        
-
-        HandleMovement();
+    // Update jumping state
+    if (activeJump && !grounded)
+    {
+        isJumping = true;
     }
+    else if (grounded)
+    {
+        isJumping = false;
+    }
+
+    // Update "considered ground" frames for leniency
+    if (grounded)
+    {
+        conSidedGround = true;
+        currCFames = cytotecFames;
+    }
+    else
+    {
+        if (currCFames > 0 && conSidedGround)
+        {
+            currCFames -= 1;
+        }
+        else
+        {
+            conSidedGround = false;
+        }
+    }
+
+    HandleMovement();
+}
+
+
 
     public bool isGrounded()
     {
         // Check if player is within ground detection radius and not falling down rapidly
-        bool isTouchingGround = Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, groundLayer);
-        bool isFalling = rb.velocity.y < -0.1f;  // Adjust threshold as needed
+        //bool isTouchingGround = Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, groundLayer);
+        //bool isFalling = rb.velocity.y < -0.1f;  // Adjust threshold as needed
 
         // Only return true if actually grounded, and not just close to the ground
-        bool grounded = isTouchingGround && !isFalling;
+        //bool grounded = isTouchingGround; //&& !isFalling;
         //Debug.Log("Is Grounded: " + grounded + " | Is Touching Ground: " + isTouchingGround + " | Is Falling: " + isFalling);
 
-        return grounded;
+        return groundCheckPoint.GetComponent<groundCheckScript>().isGrouned;
     }
 
 
@@ -135,12 +155,12 @@ public class Movescript : MonoBehaviour
     {
         if (conSidedGround || isSliding)
         {
-            conSidedGround = false;
+            // Initiate jump
+            isJumping = true;
             activeJump = true;
             jumpHoldTimer = 0f;
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Initial jump force
-            isSliding = false; // Stop sliding if player jumps
-            //Debug.Log("Jump initiated. Sliding stopped.");
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Apply initial jump force
+            isSliding = false; // Stop sliding when jumping
         }
     }
 
@@ -151,7 +171,7 @@ public class Movescript : MonoBehaviour
 
     public void StartSlide(InputAction.CallbackContext context)
     {
-        if (isGrounded())
+        if (conSidedGround)
         {
             slideRequested = true;
             slideTimer = slideDuration; // Start the slide timer
@@ -167,7 +187,7 @@ public class Movescript : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        if (isGrounded())
+        if (conSidedGround)
         {
             HandleGroundedMovement();
             HandleJump();
@@ -197,10 +217,26 @@ public class Movescript : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
             Debug.Log("Sliding with retained speed: " + rb.velocity.x);
         }
-        else if (Mathf.Abs(storedDirection.x) > 0.1f)
+        
+        
+        if (Mathf.Abs(storedDirection.x) > 0.1f)
         {
-            rb.velocity = new Vector2(rb.velocity.x + (accelerationSpeed * storedDirection.x), rb.velocity.y);
-            rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -maxRunSpeed, maxRunSpeed), rb.velocity.y);
+            if ( Mathf.Abs(rb.velocity.x) > 0f){
+                if (Mathf.Sign(storedDirection.x) == Mathf.Sign(rb.velocity.x) && Mathf.Abs(rb.velocity.x) > maxRunSpeed)
+                {
+                    // Apply drag to reduce speed
+                    rb.velocity = new Vector2(rb.velocity.x - (groundDrag * Mathf.Sign(rb.velocity.x)), rb.velocity.y);
+                }
+                else
+                {
+                    // Apply acceleration when under maxRunSpeed or changing direction
+                    rb.velocity = new Vector2(rb.velocity.x + (accelerationSpeed * storedDirection.x), rb.velocity.y);
+                }
+
+            }else{
+                rb.velocity = new Vector2(rb.velocity.x + (initialAcceleration * storedDirection.x), rb.velocity.y);
+            }
+            
         }
         else
         {
@@ -214,25 +250,40 @@ public class Movescript : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x - (groundDrag * Mathf.Sign(rb.velocity.x)), rb.velocity.y);
             }
         }
+        
+   
     }
 
     private void HandleAirborneMovement()
     {
-        // Apply horizontal acceleration based on input without clamping
-        rb.velocity = new Vector2(rb.velocity.x + (airSpeed * storedDirection.x), rb.velocity.y);
-
-        // Limit horizontal velocity only by maxAirSpeed while in the air
-        float clampedXVelocity = Mathf.Clamp(rb.velocity.x, -maxAirSpeed, maxAirSpeed);
-        rb.velocity = new Vector2(clampedXVelocity, rb.velocity.y);
-
-        // Apply air drag only if there’s no input, and if not hooked for smoother airborne control
-
-        if (Mathf.Abs(storedDirection.x) < 0.1f)
+        // Check if there's input
+        if (Mathf.Abs(storedDirection.x) > 0.1f)
         {
-            rb.velocity = new Vector2(rb.velocity.x - (airDrag * Mathf.Sign(rb.velocity.x)), rb.velocity.y);
+            // If input matches velocity direction and velocity exceeds maxAirSpeed, maintain velocity
+            if (Mathf.Sign(storedDirection.x) == Mathf.Sign(rb.velocity.x) && Mathf.Abs(rb.velocity.x) > maxAirSpeed)
+            {
+                // Maintain current velocity, do nothing
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+            }
+            else
+            {
+                // Otherwise, add velocity based on input
+                rb.velocity = new Vector2(rb.velocity.x + (airSpeed * storedDirection.x), rb.velocity.y);
+            }
         }
+        else
+        {
+            // Apply air drag if there's no input
+            rb.velocity = new Vector2(rb.velocity.x - (airDrag * Mathf.Sign(rb.velocity.x)), rb.velocity.y);
 
+            // Prevent overshooting to zero
+            if (Mathf.Abs(rb.velocity.x) < airDrag)
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
+        }
     }
+
 
     private void HandleJump()
     {

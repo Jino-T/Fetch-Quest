@@ -53,6 +53,15 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HookShot"",
+                    ""type"": ""Value"",
+                    ""id"": ""973b9a44-28d8-485c-aefc-467e1441c21a"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -220,6 +229,61 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
                     ""action"": ""Slide"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""04eaeb58-e954-44eb-99fa-51261dec4c74"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HookShot"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""cbec18cc-b445-4410-9a5a-c63bfa3cf819"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HookShot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""18e3dab9-90dc-461a-adc1-8b5a20572ab2"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HookShot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""0bc814ee-6c59-4c66-b203-9d5ab3ccace4"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HookShot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""1c7be4ba-0638-432e-ab58-0c31871454bb"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HookShot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -231,6 +295,7 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_JHook = m_Player.FindAction("JHook", throwIfNotFound: true);
         m_Player_Slide = m_Player.FindAction("Slide", throwIfNotFound: true);
+        m_Player_HookShot = m_Player.FindAction("HookShot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -295,6 +360,7 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_JHook;
     private readonly InputAction m_Player_Slide;
+    private readonly InputAction m_Player_HookShot;
     public struct PlayerActions
     {
         private @GameInput1 m_Wrapper;
@@ -302,6 +368,7 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @JHook => m_Wrapper.m_Player_JHook;
         public InputAction @Slide => m_Wrapper.m_Player_Slide;
+        public InputAction @HookShot => m_Wrapper.m_Player_HookShot;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -320,6 +387,9 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
             @Slide.started += instance.OnSlide;
             @Slide.performed += instance.OnSlide;
             @Slide.canceled += instance.OnSlide;
+            @HookShot.started += instance.OnHookShot;
+            @HookShot.performed += instance.OnHookShot;
+            @HookShot.canceled += instance.OnHookShot;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -333,6 +403,9 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
             @Slide.started -= instance.OnSlide;
             @Slide.performed -= instance.OnSlide;
             @Slide.canceled -= instance.OnSlide;
+            @HookShot.started -= instance.OnHookShot;
+            @HookShot.performed -= instance.OnHookShot;
+            @HookShot.canceled -= instance.OnHookShot;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -355,5 +428,6 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJHook(InputAction.CallbackContext context);
         void OnSlide(InputAction.CallbackContext context);
+        void OnHookShot(InputAction.CallbackContext context);
     }
 }

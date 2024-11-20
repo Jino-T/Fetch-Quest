@@ -2543,6 +2543,7 @@ MonoBehaviour:
     m_Bits: 64
   groundCheckRadius: 1
   groundCheckOffset: {x: 0, y: -0.5}
+  isJumping: 0
   cytotecFames: 0
   conSidedGround: 0
 --- !u!114 &1285619688
@@ -3037,17 +3038,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d7f7e348f92e422890f3152d197e369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialAcceleration: 0.5
-  accelerationSpeed: 0.2
+  initialAcceleration: 0.8
+  accelerationSpeed: 0.5
   airSpeed: 0.04
   jumpForce: 4
   jumpHoldForce: 10
   maxJumpHoldTime: 0.3
   slideDuration: 0.3
   jumpFloat: 0.5
-  groundCheckPoint: {fileID: 1960585792}
+  groundCheckPoint: {fileID: 1960585791}
   maxAirSpeed: 13
-  maxRunSpeed: 4
+  maxRunSpeed: 5.5
   minSpeed: 2
   groundDrag: 1
   airDrag: 0.25
@@ -3060,6 +3061,7 @@ MonoBehaviour:
     m_Bits: 64
   groundCheckRadius: 1
   groundCheckOffset: {x: 0, y: -0.5}
+  isJumping: 0
   cytotecFames: 5
   conSidedGround: 0
 --- !u!114 &1900261316
@@ -3326,6 +3328,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1960585792}
   - component: {fileID: 1960585793}
+  - component: {fileID: 1960585794}
+  - component: {fileID: 1960585795}
   m_Layer: 0
   m_Name: GroundCheckPoint
   m_TagString: Untagged
@@ -3341,13 +3345,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960585791}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.005, y: -0.353, z: 0}
-  m_LocalScale: {x: 0.346, y: 0.3, z: 0.346}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.003, y: -0.44, z: 0}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1900261313}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &1960585793
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3400,6 +3404,58 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1960585794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960585791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58ff23481cee84661835f3a3ca4d0f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  inputTag: 
+  isGrouned: 0
+--- !u!70 &1960585795
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960585791}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.033311576, y: 0.011570717}
+  m_Size: {x: 1.0451493, y: 2.3681955}
+  m_Direction: 0
 --- !u!1 &2023600498
 GameObject:
   m_ObjectHideFlags: 0

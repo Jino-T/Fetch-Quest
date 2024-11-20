@@ -79,9 +79,7 @@ public class GrappleManager : MonoBehaviour
 
     private void Update()
     {
-        lineRenderer.startWidth =widthHook;
-        lineRenderer.endWidth =widthHook;
-
+        
         if (playerMoveState.conSidedGround && !hooked){
             StopBoxCast();
         }
@@ -95,6 +93,7 @@ public class GrappleManager : MonoBehaviour
         // Update BoxCast timer if active
         if (isBoxCasting )
         {
+            
             lineRenderer.enabled= true;
 
             if ( ! hooked ){
@@ -153,6 +152,7 @@ public class GrappleManager : MonoBehaviour
     private void InputCheak(InputAction.CallbackContext value)
     {
         storedDirection = value.ReadValue<Vector2>();
+        hookcastDir = storedDirection.normalized;
     }
 
     private void DeInputCheak(InputAction.CallbackContext value){
@@ -199,6 +199,8 @@ public class GrappleManager : MonoBehaviour
     // Perform a BoxCast and return the hit result
     private RaycastHit2D PerformBoxCast(Vector2 inputDirection)
     {
+        lineRenderer.startWidth =widthHook;
+        lineRenderer.endWidth =widthHook;
         //Debug.Log("dik");
         // Define the width and height of the box for the BoxCast
         //float width = 2f; // Set as needed for the width of the box
