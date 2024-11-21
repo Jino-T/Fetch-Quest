@@ -47,6 +47,9 @@ public class Movescript : MonoBehaviour
     private bool slideRequested = false;
     private float jumpHoldTimer = 0f;
 
+    public string killTag;   
+    public LayerMask killLayer;
+
 
     // cytotec time
 
@@ -182,10 +185,6 @@ public class Movescript : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
 
         if (conSidedGround)
         {
@@ -293,5 +292,31 @@ public class Movescript : MonoBehaviour
             jumpHoldTimer += Time.fixedDeltaTime;
             //Debug.Log("Jump held. Hold timer: " + jumpHoldTimer);
         }
+    }
+
+    /// <summary>
+    /// Sent when another object enters a trigger collider attached to this
+    /// object (2D physics only).
+    /// </summary>
+    /// <param name="other">The other Collider2D involved in this collision.</param>
+    private void OnTriggerEnter2D(Collider2D other)
+{
+    if (killLayerOrTag(other.gameObject))
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+       
+    }
+}
+
+public bool killLayerOrTag(GameObject obj)
+    {
+        if (obj == null) return false;
+
+        
+        bool layerMatches = ((1 << obj.layer) & killLayer) != 0;
+        bool tagMatches = obj.CompareTag(killTag);
+
+        return layerMatches || tagMatches;
     }
 }
