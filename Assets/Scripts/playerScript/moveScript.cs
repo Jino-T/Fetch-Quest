@@ -358,7 +358,7 @@ public class Movescript : MonoBehaviour
 
 private void OnTriggerStay2D(Collider2D other)
 {
-    Debug.Log( other.CompareTag("wall"));
+    //Debug.Log( other.CompareTag("wall"));
  
 
    if (  isJumping &&  ((other.CompareTag("ground") && other.transform.position.y >= (this.transform.position.y +  GetSpecificCapsuleCollider(0).bounds.size.y)) || other.CompareTag("wall")) )

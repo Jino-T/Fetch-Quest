@@ -122,6 +122,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &22856674 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4292956576158505540, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+  m_PrefabInstance: {fileID: 8226182659250265645}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &335176422
 GameObject:
   m_ObjectHideFlags: 0
@@ -790,7 +795,7 @@ PrefabInstance:
     - target: {fileID: 3707677965518660668, guid: cc96517855c2c208ea6a1d845c584b5c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 22856674}
     - target: {fileID: 3707677965518660668, guid: cc96517855c2c208ea6a1d845c584b5c, type: 3}
       propertyPath: levelManager
       value: 
@@ -1326,10 +1331,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8380073503860014325, guid: f0983128baf19802981959de7065c53c, type: 3}
+      propertyPath: nextScene
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8380073503860014325, guid: f0983128baf19802981959de7065c53c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7991379795963782417, guid: f0983128baf19802981959de7065c53c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1664716126}
   m_SourcePrefab: {fileID: 100100000, guid: f0983128baf19802981959de7065c53c, type: 3}
 --- !u!1 &1271462996
 GameObject:
@@ -7518,7 +7531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d04e96c84759ced50a4ce9e143f65eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numKeys: 0
+  numKeys: 2
   numKeysHeld: 0
 --- !u!1 &1361917924
 GameObject:
@@ -7765,11 +7778,11 @@ PrefabInstance:
     - target: {fileID: 3707677965518660668, guid: cc96517855c2c208ea6a1d845c584b5c, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 22856674}
     - target: {fileID: 3707677965518660668, guid: cc96517855c2c208ea6a1d845c584b5c, type: 3}
       propertyPath: levelManager
       value: 
-      objectReference: {fileID: 1600021088}
+      objectReference: {fileID: 1285619686}
     - target: {fileID: 6186136495777298485, guid: cc96517855c2c208ea6a1d845c584b5c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -28.533726
@@ -7907,6 +7920,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1664716121 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7991379795963782417, guid: f0983128baf19802981959de7065c53c, type: 3}
+  m_PrefabInstance: {fileID: 1091757134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &1664716123 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 6659531445530664428, guid: f0983128baf19802981959de7065c53c, type: 3}
+  m_PrefabInstance: {fileID: 1091757134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1664716126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664716121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbcbc1c65d044e2bcbbcc112e80a04a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doorCollider: {fileID: 1664716123}
+  nextScene: 3
+  locked: 0
+  player: {fileID: 22856674}
+  levelManager: {fileID: 1285619686}
 --- !u!1 &1845041276
 GameObject:
   m_ObjectHideFlags: 0
