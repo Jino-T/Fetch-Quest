@@ -5961,6 +5961,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8380073503860014325, guid: f0983128baf19802981959de7065c53c, type: 3}
+      propertyPath: nextScene
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11824,31 +11828,26 @@ MonoBehaviour:
   initialAcceleration: 1
   accelerationSpeed: 0.4
   airSpeed: 0.2
+  logMultiplier: 0
   jumpForce: 5
-  jumpHoldForce: 30
+  maxJumpForce: 0
   maxJumpHoldTime: 0.3
   slideDuration: 0.3
-  jumpFloat: 1
   groundCheckPoint: {fileID: 1960585792}
   maxAirSpeed: 20
   maxRunSpeed: 7
   minSpeed: 3
   groundDrag: 1.5
   airDrag: 0.5
-  isMoving: 0
   hooked: 0
   grappleManager: {fileID: 1285619688}
   rb: {fileID: 1900261312}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  groundCheckRadius: 1
-  groundCheckOffset: {x: 0, y: -0.5}
   isJumping: 0
   killTag: 
   killLayer:
     serializedVersion: 2
     m_Bits: 0
+  timeBuffTime: 0
   cytotecFames: 0
   conSidedGround: 0
 --- !u!114 &1285619688
@@ -11866,6 +11865,7 @@ MonoBehaviour:
   hookDrag: 0
   hookType: 1
   hooked: 0
+  canHook: 0
   mouseAct: 1
   distHook: 0
   widthHook: 0

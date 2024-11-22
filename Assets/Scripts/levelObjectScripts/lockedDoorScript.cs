@@ -10,7 +10,7 @@ public class LockedDoorScript : MonoBehaviour
 {
 
     public Collider2D doorCollider;
-    public string nextScene;
+    public int nextScene;
     public bool locked;
     [SerializeField] GameObject player;
     public GameObject levelManager;
@@ -24,7 +24,7 @@ public class LockedDoorScript : MonoBehaviour
         //Debug.Log(levelManager.GetComponent<levelManagerScript>().numKeys);
         //Debug.Log(levelManager.GetComponent<levelManagerScript>().numKeysHeld);
         if(!locked) {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(nextScene);
         }
     } 
 
