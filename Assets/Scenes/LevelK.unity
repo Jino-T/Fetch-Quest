@@ -7669,6 +7669,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player 1 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5751992699772933690, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+      propertyPath: hookList
+      value: 
+      objectReference: {fileID: 2137144356}
     - target: {fileID: 5953888546908963006, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
       propertyPath: m_Offset.x
       value: 0.0049
@@ -8091,6 +8095,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a9c260799c804e4685db18de34fa1c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2137144356 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8428961832953684608, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+  m_PrefabInstance: {fileID: 1571685244}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137144347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25668b37e4f3648e8bcaacbd8be42875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &8226182659250265645

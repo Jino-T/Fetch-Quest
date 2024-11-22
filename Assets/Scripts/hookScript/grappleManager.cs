@@ -34,6 +34,8 @@ public class GrappleManager : MonoBehaviour
 
     private Vector2 hookedPoz;
 
+    private GameObject hookObj;
+
     public float boxCastDuration = 3f; // Duration of the BoxCast
     private float boxCastTimer = 0f; // Timer to track the BoxCast duration
     private bool isBoxCasting = false; // Flag to track whether BoxCast is active
@@ -128,7 +130,7 @@ public class GrappleManager : MonoBehaviour
                 
                     GameObject hitPosition = hit.collider.gameObject;
                     hookedPoz = hit.collider.gameObject.GetComponent<Rigidbody2D>().transform.position;
-                
+                    hookObj = hit.collider.gameObject;
                     actHook(hitPosition);
                     hooked =true;
                 }
@@ -229,7 +231,9 @@ public class GrappleManager : MonoBehaviour
     {
         lineRenderer.SetPosition(0, rb.position);
         if (hooked){
-            lineRenderer.SetPosition(1, hookedPoz);
+            //lineRenderer.SetPosition(1, hookedPoz);
+            
+            lineRenderer.SetPosition(1, hookObj.transform.position);
         }else{
             lineRenderer.SetPosition(1, transform.position + (Vector3)(hookcastDir.normalized * (distHook+1.35f)));
 

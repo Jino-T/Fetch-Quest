@@ -358,7 +358,7 @@ public class Movescript : MonoBehaviour
 
 private void OnTriggerStay2D(Collider2D other)
 {
-    Debug.Log( other.CompareTag("wall"));
+    //Debug.Log( other.CompareTag("wall"));
  
 
    if (  isJumping &&  ((other.CompareTag("ground") && other.transform.position.y >= (this.transform.position.y +  GetSpecificCapsuleCollider(0).bounds.size.y)) || other.CompareTag("wall")) )
@@ -371,7 +371,7 @@ private void OnTriggerStay2D(Collider2D other)
 
         // Adjust the position slightly in the x-direction
         this.transform.position = new Vector2(((GetSpecificCapsuleCollider(1).bounds.size.x - GetSpecificCapsuleCollider(0).bounds.size.x)/2 ) * diff.normalized.x + this.transform.position.x, this.transform.position.y);
-        Debug.Log("when off");
+        //Debug.Log("when off");
     }
     
 }
