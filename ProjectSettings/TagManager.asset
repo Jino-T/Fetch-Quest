@@ -8,6 +8,7 @@ TagManager:
   - KillTag
   - Key
   - ground
+  - wall
   layers:
   - Default
   - TransparentFX

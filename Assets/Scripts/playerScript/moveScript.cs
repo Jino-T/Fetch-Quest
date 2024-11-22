@@ -353,6 +353,27 @@ public class Movescript : MonoBehaviour
 
        
     }
+    
+}
+
+private void OnTriggerStay2D(Collider2D other)
+{
+    Debug.Log( other.CompareTag("wall"));
+ 
+
+   if (  isJumping &&  ((other.CompareTag("ground") && other.transform.position.y >= (this.transform.position.y +  GetSpecificCapsuleCollider(0).bounds.size.y)) || other.CompareTag("wall")) )
+    {
+        
+
+        // Calculate the difference in positions
+        Vector2 diff = other.transform.position - this.transform.position;
+        //if ( this.rb.velocity.normalized.x == diff. normalized)
+
+        // Adjust the position slightly in the x-direction
+        this.transform.position = new Vector2(((GetSpecificCapsuleCollider(1).bounds.size.x - GetSpecificCapsuleCollider(0).bounds.size.x)/2 ) * diff.normalized.x + this.transform.position.x, this.transform.position.y);
+        Debug.Log("when off");
+    }
+    
 }
 
 public bool killLayerOrTag(GameObject obj)
@@ -365,4 +386,18 @@ public bool killLayerOrTag(GameObject obj)
 
         return layerMatches || tagMatches;
     }
+
+CapsuleCollider2D GetSpecificCapsuleCollider(int index)
+{
+    CapsuleCollider2D[] colliders = GetComponents<CapsuleCollider2D>();
+    if (index >= 0 && index < colliders.Length)
+    {
+        return colliders[index];
+    }
+    else
+    {
+        Debug.LogWarning("Invalid collider index!");
+        return null;
+    }
+}
 }

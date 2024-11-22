@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 506684020}
   m_Layer: 0
   m_Name: Walls
-  m_TagString: Untagged
+  m_TagString: wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7668,6 +7668,38 @@ PrefabInstance:
     - target: {fileID: 4292956576158505540, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
       propertyPath: m_Name
       value: Player 1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5953888546908963006, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.0049
+      objectReference: {fileID: 0}
+    - target: {fileID: 5953888546908963006, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.026
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211486671651965519, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457143431373235890, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+      propertyPath: m_Size.x
+      value: 0.76467514
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457143431373235890, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+      propertyPath: m_Size.y
+      value: 1.0178022
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457143431373235890, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.0042057037
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457143431373235890, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.02602911
+      objectReference: {fileID: 0}
+    - target: {fileID: 6457143431373235890, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7236179065599467717, guid: 46e173f132e7f40a0b7d01060be5232b, type: 3}
       propertyPath: m_LocalPosition.x
