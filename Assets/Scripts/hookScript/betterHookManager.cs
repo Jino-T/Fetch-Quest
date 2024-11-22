@@ -11,15 +11,15 @@ using UnityEngine.UIElements;
 
 public class GrappleController : MonoBehaviour
 {
-    public GameObject test;
+    //public GameObject test;
     public GameObject playerObj;
     public GameObject jointPrefab;        // Prefab of the joint GameObject
-    public GameObject hookPointPrefab;    // Prefab for the hook point
-    public LayerMask collisionLayer;      // Layer to check for collisions
-    public float maxJointDistance = 1.0f; // Maximum distance between nodes
+    //public GameObject hookPointPrefab;    // Prefab for the hook point
+    //public LayerMask collisionLayer;      // Layer to check for collisions
+    //public float maxJointDistance = 1.0f; // Maximum distance between nodes
 
-    private NewBetterHook grappleHook;    // Instance of the hook class
-    public Camera mainCamera;
+    public NewBetterHook grappleHook;    // Instance of the hook class
+    
 
     public float minDist;
 
@@ -55,7 +55,7 @@ public class GrappleController : MonoBehaviour
 
     void Start()
     {
-        mainCamera = Camera.main;
+        //mainCamera = Camera.main;
         
         //ActivateHookConnection(test);
 
@@ -183,7 +183,7 @@ public class GrappleController : MonoBehaviour
 
                     }
                     if ( collisionPoint != null){
-                        Debug.Log(currNode.GetObj().name);
+                        //Debug.Log(currNode.GetObj().name);
                     }
                     
                     
@@ -251,10 +251,7 @@ public class GrappleController : MonoBehaviour
                     
                     
                     
-                    if (collisionPoint != null && !rover.Equals(playerObj) && !currNode.Equals(hookPointPrefab)){
 
-
-                    }
                 }
                 
             }
@@ -402,7 +399,7 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
     if (hit.collider != null)
     {
         // Print the name of the object it collides with
-        Debug.Log("Collided with: " + hit.collider.gameObject.name);
+        //Debug.Log("Collided with: " + hit.collider.gameObject.name);
 
         // Calculate the point along the center line at the same distance as the hit point
         float hitDistance = Vector2.Distance(pointA, hit.point);
@@ -479,13 +476,13 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
         spriteRenderer.color = new Color(1, 0, 0);
         ropeLength = Vector2.Distance(playerObj.gameObject.transform.position, targetHookPoint.transform.position);
 
-         printList();
+         //printList();
         
         grappleHook.AddNewNode(targetHookPoint);
 
-        Debug.Log( "///////");
+        //Debug.Log( "///////");
 
-         printList();
+         //printList();
 
 
         if (playerObj != null && targetHookPoint != null)
@@ -526,7 +523,7 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
 
             Printrover = currNode;
 
-            Debug.Log("Grapple activated.");
+            //Debug.Log("Grapple activated.");
 
             if (!IsMovingTowards(playerRigidbody, targetHookPoint.transform.position)){
                 RedirectVelocityAlongCircle(targetHookPoint.transform.position, playerObj, scalingFactor);
@@ -727,7 +724,7 @@ void RedirectVelocityAlongCircle(Vector2 circleCenter, GameObject playerObject, 
     // Modify momentum if scaling factor is non-zero
     if (scalingFactor != 0)
     {
-        Debug.Log("modifyting");
+        //Debug.Log("modifyting");
         newVelocity = ModifyMomentum(playerRigidbody, newVelocity, 1 + scalingFactor);
     }
 
@@ -738,7 +735,7 @@ void RedirectVelocityAlongCircle(Vector2 circleCenter, GameObject playerObject, 
 // Function to modify momentum using projection
 Vector2 ModifyMomentum(Rigidbody2D playerRigidbody, Vector2 targetVelocity, float scalingFactor)
 {
-    Debug.Log("working");
+    //Debug.Log("working");
 
     // Get the player's current velocity
     Vector2 currentVelocity = playerRigidbody.velocity;

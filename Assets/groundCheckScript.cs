@@ -47,7 +47,7 @@ public class groundCheckScript : MonoBehaviour
         bool tagMatches = string.IsNullOrEmpty(inputTag) || collider.CompareTag(inputTag);
 
         // Return true if both conditions are satisfied
-        return layerMatches && tagMatches;
+        return layerMatches || tagMatches;
     }
 
 

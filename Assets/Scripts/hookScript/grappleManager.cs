@@ -11,6 +11,8 @@ public class GrappleManager : MonoBehaviour
     public float hookDrag;
     public int hookType;
     public bool hooked;
+
+    public bool canHook;
     public bool mouseAct = false;
 
     public float distHook;
@@ -21,6 +23,7 @@ public class GrappleManager : MonoBehaviour
 
     private Vector2 storedDirection;
     public LayerMask hooks;
+     //public LayerMask ground;
 
     private Vector2 hookcastDir;
 
@@ -77,11 +80,12 @@ public class GrappleManager : MonoBehaviour
 
     
 
-    private void Update()
+    private void FixedUpdate()
     {
         
-        if (playerMoveState.conSidedGround && !hooked){
+        if (playerMoveState.conSidedGround && !hooked ){
             StopBoxCast();
+            canHook = true;
         }
 
 
@@ -110,9 +114,9 @@ public class GrappleManager : MonoBehaviour
                 if (hit.collider == null){
 
                     // Debug.DrawRay(rb.position, storedDirection * Mathf.Infinity, Color.red, 2f);
-                    Debug.Log("miss"); 
+                    //Debug.Log("miss"); 
                 }
-                if (hit.collider != null){
+                if (hit.collider != null ){
                     Debug.Log(hit.collider.gameObject.name);
                     if ( hit.collider.gameObject.GetComponent<Rigidbody2D>() == null){
                         Rigidbody2D collidRigd = hit.collider.gameObject.AddComponent<Rigidbody2D>();
@@ -170,10 +174,11 @@ public class GrappleManager : MonoBehaviour
             playerObject.GetComponent<GrappleController>().DeactivateHookConnection();
             hooked =  false;
         }
-        else if (!hooked && !playerMoveState.conSidedGround && !isBoxCasting )
+        else if (!hooked && !playerMoveState.conSidedGround && !isBoxCasting && canHook )
         {
             // Start the BoxCast for 3 seconds
             hookcastDir = storedDirection.normalized;
+            canHook = false;
             StartBoxCast();
             
             
@@ -213,7 +218,7 @@ public class GrappleManager : MonoBehaviour
 
     private void actHook(GameObject endPos)
     {
-        Debug.Log("Using Soft Proto Hook");
+        //Debug.Log("Using Soft Proto Hook");
         
         
         playerObject.GetComponent<GrappleController>().ActivateHookConnection(endPos);

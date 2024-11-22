@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -11,15 +12,18 @@ public class Movescript : MonoBehaviour
     public float initialAcceleration;
     public float accelerationSpeed;
     public float airSpeed;
+
+    public float logMultiplier;
     public float jumpForce;
-    public float jumpHoldForce;
+    public float maxJumpForce;
+    //public float jumpHoldForceScale;
     public float maxJumpHoldTime;
 
     public float slideDuration = 0.3f; // Duration for which player retains air speed on ground while sliding
     private float slideTimer = 0f;
     private bool isSliding = false;
 
-    public float jumpFloat;
+    //public float jumpFloat;
     
     public GameObject groundCheckPoint;
     public float maxAirSpeed;
@@ -28,7 +32,7 @@ public class Movescript : MonoBehaviour
     public float groundDrag;
     public float airDrag;
 
-    public bool isMoving = false;
+    //public bool isMoving = false;
     public bool hooked;
 
     public GrappleManager grappleManager;
@@ -36,19 +40,24 @@ public class Movescript : MonoBehaviour
 
     private GameInput1 controls;
 
-    public LayerMask groundLayer;
-    public float groundCheckRadius = 2f;
-    public Vector2 groundCheckOffset = new Vector2(0, -0.5f);
+    /// <summary>
+    //public LayerMask groundLayer;
+    /// </summary>
+    //public float groundCheckRadius = 2f;
+    //public Vector2 groundCheckOffset = new Vector2(0, -0.5f);
 
     private Vector2 storedDirection = Vector2.zero;
 
     public bool isJumping = false;
-    private bool activeJump = false;
+    private bool pushingJump = false;
     private bool slideRequested = false;
     private float jumpHoldTimer = 0f;
 
     public string killTag;   
     public LayerMask killLayer;
+
+    private Timer jumpBuffTimer;
+    public float timeBuffTime;
 
 
     // cytotec time
@@ -56,6 +65,8 @@ public class Movescript : MonoBehaviour
     public int cytotecFames;
     private int currCFames =0;
     public bool conSidedGround = false;
+    
+
 
     private void Awake()
     {
@@ -64,6 +75,9 @@ public class Movescript : MonoBehaviour
 
     private void Start()
     {
+        jumpBuffTimer = this.AddComponent<Timer>();
+        jumpBuffTimer.Initialize(true, timeBuffTime );
+        
     }
 
     private void Update()
@@ -94,17 +108,32 @@ public class Movescript : MonoBehaviour
 
     void FixedUpdate()
     {
-        bool grounded = isGrounded();
+    bool grounded = isGrounded();
 
     // Update jumping state
-    if (activeJump && !grounded)
+    if (pushingJump  )
     {
-        isJumping = true;
+        if (!conSidedGround && isJumping){
+            HandleJump();
+
+        }
+    }else{
+        if(grounded ){
+            isJumping = false;
+            jumpHoldTimer = maxJumpHoldTime;
+
+        }
     }
-    else if (grounded)
-    {
-        isJumping = false;
+
+    if (conSidedGround && !jumpBuffTimer.IsFinished()){
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Apply initial jump force
+        isJumping =true;
+        jumpHoldTimer = 0f;
+        isSliding = false;
+        jumpBuffTimer.EndTimer();
+
     }
+    
 
     // Update "considered ground" frames for leniency
     if (grounded)
@@ -114,7 +143,7 @@ public class Movescript : MonoBehaviour
     }
     else
     {
-        if (currCFames > 0 && conSidedGround)
+        if (currCFames > 0 && conSidedGround && !isJumping)
         {
             currCFames -= 1;
         }
@@ -156,20 +185,28 @@ public class Movescript : MonoBehaviour
 
     public void ActiveJump(InputAction.CallbackContext context)
     {
-        if (conSidedGround || isSliding)
-        {
-            // Initiate jump
-            isJumping = true;
-            activeJump = true;
-            jumpHoldTimer = 0f;
+        if (conSidedGround ){
             rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Apply initial jump force
-            isSliding = false; // Stop sliding when jumping
+            isJumping =true;
+            jumpHoldTimer = 0f;
+            isSliding = false;
+            jumpBuffTimer.EndTimer();
+
+
+        }else{
+
+            jumpBuffTimer.ResetTimer();
+            jumpBuffTimer.StartTimer();
+
         }
+
+        pushingJump = true;
+        
     }
 
     public void DeActiveJump(InputAction.CallbackContext context)
     {
-        activeJump = false;
+        pushingJump = false;
     }
 
     public void StartSlide(InputAction.CallbackContext context)
@@ -189,7 +226,7 @@ public class Movescript : MonoBehaviour
         if (conSidedGround)
         {
             HandleGroundedMovement();
-            HandleJump();
+            //HandleJump();
         }
         else if (!hooked)
         {
@@ -286,12 +323,21 @@ public class Movescript : MonoBehaviour
 
     private void HandleJump()
     {
-        if (activeJump && jumpHoldTimer < maxJumpHoldTime)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + jumpHoldForce * Time.fixedDeltaTime);
+        if(pushingJump && isJumping && rb.velocity.y >0 &&  jumpHoldTimer < maxJumpHoldTime){
+
+            float scaledJumpForce = Mathf.Log(jumpForce + jumpHoldTimer * logMultiplier, logMultiplier);
+            scaledJumpForce = Mathf.Clamp(scaledJumpForce, jumpForce, maxJumpForce);
+            rb.velocity = new Vector2(rb.velocity.x, scaledJumpForce);
             jumpHoldTimer += Time.fixedDeltaTime;
+        }
+        /*
+        if (pushingJump && jumpHoldTimer < maxJumpHoldTime)
+        {
+            //rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + jumpHoldForceScale * Time.fixedDeltaTime);
+            //jumpHoldTimer += Time.fixedDeltaTime;
             //Debug.Log("Jump held. Hold timer: " + jumpHoldTimer);
         }
+        */
     }
 
     /// <summary>

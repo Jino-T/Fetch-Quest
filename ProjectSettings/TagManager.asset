@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Door
   - KillTag
+  - Key
+  - ground
   layers:
   - Default
   - TransparentFX
@@ -13,7 +15,7 @@ TagManager:
   - 
   - Water
   - UI
-  - ground
+  - hookCollision
   - RopeLayer
   - LastSegmentLayer
   - hooks
@@ -26,7 +28,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - ground
   - 
   - 
   - 

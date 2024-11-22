@@ -70,7 +70,7 @@ public class NewBetterHook : MonoBehaviour
 
         public Node GetLeftNode() => this.nodeLeft;
         public Node GetRightNode() => this.nodeRight;
-        public GameObject GetObj() => this. thisObj;
+        public GameObject GetObj() => this.thisObj;
 
         public void SetNodeLeft(Node left) => nodeLeft = left;
         public void SetNodeRight(Node right) => nodeRight = right;
