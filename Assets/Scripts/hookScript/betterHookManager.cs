@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 
 
 //using UnityEditor.Experimental.GraphView;
@@ -58,6 +58,8 @@ public class GrappleController : MonoBehaviour
         //mainCamera = Camera.main;
         
         //ActivateHookConnection(test);
+        //grappleHook = this.GetComponent<NewBetterHook>();
+        grap = this.GetComponent<GrappleManager>();
 
         grappleHook = new NewBetterHook( jointPrefab);
         grappleHook.AddNewNode(playerObj);

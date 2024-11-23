@@ -13,10 +13,10 @@ public class Movescript : MonoBehaviour
     public float accelerationSpeed;
     public float airSpeed;
 
-    public float logMultiplier;
+    //public float logMultiplier;
     public float jumpForce;
-    public float maxJumpForce;
-    //public float jumpHoldForceScale;
+    //public float maxJumpForce;
+    public float jumpHoldForceScale;
     public float maxJumpHoldTime;
 
     public float slideDuration = 0.3f; // Duration for which player retains air speed on ground while sliding
@@ -49,6 +49,7 @@ public class Movescript : MonoBehaviour
     private Vector2 storedDirection = Vector2.zero;
 
     public bool isJumping = false;
+    public bool holdJump = false;
     private bool pushingJump = false;
     private bool slideRequested = false;
     private float jumpHoldTimer = 0f;
@@ -75,6 +76,7 @@ public class Movescript : MonoBehaviour
 
     private void Start()
     {
+        grappleManager = this.GetComponent<GrappleManager>();
         jumpBuffTimer = this.AddComponent<Timer>();
         jumpBuffTimer.Initialize(true, timeBuffTime );
         
@@ -131,6 +133,7 @@ public class Movescript : MonoBehaviour
         jumpHoldTimer = 0f;
         isSliding = false;
         jumpBuffTimer.EndTimer();
+        holdJump = true;
 
     }
     
@@ -191,6 +194,7 @@ public class Movescript : MonoBehaviour
             jumpHoldTimer = 0f;
             isSliding = false;
             jumpBuffTimer.EndTimer();
+            holdJump = true;
 
 
         }else{
@@ -207,6 +211,7 @@ public class Movescript : MonoBehaviour
     public void DeActiveJump(InputAction.CallbackContext context)
     {
         pushingJump = false;
+        holdJump = false;
     }
 
     public void StartSlide(InputAction.CallbackContext context)
@@ -323,21 +328,14 @@ public class Movescript : MonoBehaviour
 
     private void HandleJump()
     {
-        if(pushingJump && isJumping && rb.velocity.y >0 &&  jumpHoldTimer < maxJumpHoldTime){
+        if(holdJump && isJumping && rb.velocity.y >0 &&  jumpHoldTimer < maxJumpHoldTime){
 
-            float scaledJumpForce = Mathf.Log(jumpForce + jumpHoldTimer * logMultiplier, logMultiplier);
-            scaledJumpForce = Mathf.Clamp(scaledJumpForce, jumpForce, maxJumpForce);
-            rb.velocity = new Vector2(rb.velocity.x, scaledJumpForce);
+
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + jumpHoldForceScale * Time.fixedDeltaTime);
             jumpHoldTimer += Time.fixedDeltaTime;
-        }
-        /*
-        if (pushingJump && jumpHoldTimer < maxJumpHoldTime)
-        {
-            //rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + jumpHoldForceScale * Time.fixedDeltaTime);
-            //jumpHoldTimer += Time.fixedDeltaTime;
             //Debug.Log("Jump held. Hold timer: " + jumpHoldTimer);
         }
-        */
+        
     }
 
     /// <summary>
