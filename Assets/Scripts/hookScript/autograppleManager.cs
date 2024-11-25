@@ -10,9 +10,9 @@ public class AutoGrappleManager : MonoBehaviour
 {
     public float hookDrag;
     public int hookType;
-    public bool hooked;
+    //public bool hooked;
 
-    public bool canHook;
+    //public bool canHook;
     public bool mouseAct = false;
 
     //public float distHook;
@@ -30,6 +30,8 @@ public class AutoGrappleManager : MonoBehaviour
     private Rigidbody2D rb;
     private GameInput1 controls;
     public Movescript playerMoveState; // Updated from Movescript to PlayerMovement
+
+    private playerStateScript playerState;
     public GameObject playerObject;
 
     private Vector2 hookedPoz;
@@ -50,13 +52,15 @@ public class AutoGrappleManager : MonoBehaviour
 
         rb = playerObject.GetComponent<Rigidbody2D>();
 
+        playerState = this.GetComponent<playerStateScript>();
+
         
         //playerObject.GetComponent<softProto>().mouseAct = mouseAct;
 
         //playerObject.GetComponent<GrappleController>().CreateGrappleHook( jointPrefab);
 
         // Set up the LineRenderer
-        //lineRenderer = playerObject.AddComponent<LineRenderer>();
+        lineRenderer = this.GetComponent<LineRenderer>();
         //lineRenderer.positionCount = 5; // 4 points for the box corners, and 1 to close the loop
         //lineRenderer.startWidth = widthHook;
         //lineRenderer.endWidth = widthHook;
@@ -86,9 +90,9 @@ public class AutoGrappleManager : MonoBehaviour
     private void FixedUpdate()
     {
         
-        if (playerMoveState.conSidedGround && !hooked ){
+        if (playerState.conSidedGround && !playerState.isGrappleHook ){
             StopBoxCast();
-            canHook = true;
+            //playerState.canGrappleHook = true;
         }
 
 
@@ -101,9 +105,9 @@ public class AutoGrappleManager : MonoBehaviour
         if (isBoxCasting )
         {
             
-            lineRenderer.enabled= true;
+            
 
-            if ( ! hooked ){
+            if ( ! playerState.isGrappleHook ){
 
                 
                 boxCastTimer += Time.deltaTime;
@@ -112,10 +116,13 @@ public class AutoGrappleManager : MonoBehaviour
                     isBoxCasting = false; // Stop casting after duration
                 }
 
-                Collider2D hit = PerformBoxCast(hookcastDir);
+                Collider2D hit = PerformBoxCast();
 
 
                 if (hit != null ){
+                    DrawBoxCast();
+                    lineRenderer.enabled= true;
+                    playerState.canGrappleHook = false;
                     Debug.Log(hit.gameObject.name);
                     if ( hit.gameObject.GetComponent<Rigidbody2D>() == null){
                         Rigidbody2D collidRigd = hit.gameObject.AddComponent<Rigidbody2D>();
@@ -129,27 +136,25 @@ public class AutoGrappleManager : MonoBehaviour
                     hookedPoz = hit.gameObject.GetComponent<Rigidbody2D>().transform.position;
                     hookObj = hit.gameObject;
                     actHook(hitPosition);
-                    hooked =true;
+                    playerState.isGrappleHook =true;
                 }
                 //DrawBoxCast();  
 
             }else{
                 isBoxCasting = false;
             }
-        }else{
-            if (hooked){
-                lineRenderer.enabled= true;
-                DrawBoxCast();  
-            }else{
-                lineRenderer.enabled= false;
-            }
+        }
+
+        if ( playerState.isGrappleHook){
+            DrawBoxCast();
+            lineRenderer.enabled= true;
         }
     }
 
     private void Awake()
     {
         controls = new GameInput1();
-        controls.Player.JHook.performed += _ => Hook();
+        controls.Player.Jump.performed += _ => Hook();
     }
 
     private void InputCheak(InputAction.CallbackContext value)
@@ -168,16 +173,16 @@ public class AutoGrappleManager : MonoBehaviour
 
     private void Hook()
     { //Debug.Log("hooking");
-        if (hooked)
+        if (playerState.isGrappleHook)
         {
             playerObject.GetComponent<GrappleController>().DeactivateHookConnection();
-            hooked =  false;
+            playerState.isGrappleHook =  false;
         }
-        else if (!hooked && !playerMoveState.conSidedGround && !isBoxCasting && canHook )
+        else if (!playerState.isGrappleHook && !playerState.conSidedGround && !isBoxCasting && playerState.canGrappleHook )
         {
             // Start the BoxCast for 3 seconds
             hookcastDir = storedDirection.normalized;
-            canHook = false;
+            //playerState.canGrappleHook = false;
             StartBoxCast();
             
             
@@ -201,7 +206,7 @@ public class AutoGrappleManager : MonoBehaviour
 
 
     // Perform a BoxCast and return the hit result
-    private Collider2D PerformBoxCast(Vector2 inputDirection)
+    private Collider2D PerformBoxCast()
     {
         lineRenderer.startWidth =1f;
         lineRenderer.endWidth =1f;
@@ -240,7 +245,7 @@ public class AutoGrappleManager : MonoBehaviour
     private void DrawBoxCast()
     {
         lineRenderer.SetPosition(0, rb.position);
-        if (hooked){
+        if (playerState.isGrappleHook){
             //lineRenderer.SetPosition(1, hookedPoz);
             
             lineRenderer.SetPosition(1, hookObj.transform.position);

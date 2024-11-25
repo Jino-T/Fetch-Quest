@@ -28,7 +28,7 @@ public class GrappleController : MonoBehaviour
 
     public int slj=0;
 
-    public bool isActiv = false;
+    //public bool isActiv = false;
 
     public float scalingFactor;
 
@@ -47,11 +47,12 @@ public class GrappleController : MonoBehaviour
     bool ispressed;
 
     private SpriteRenderer spriteRenderer;
+    private playerStateScript playerState;
 
 
 
 
-    private bool isHooked = true;
+    //private bool isHooked = true;
 
     void Start()
     {
@@ -60,6 +61,7 @@ public class GrappleController : MonoBehaviour
         //ActivateHookConnection(test);
         //grappleHook = this.GetComponent<NewBetterHook>();
         grap = this.GetComponent<GrappleManager>();
+        playerState = this.GetComponent<playerStateScript>();
 
         grappleHook = new NewBetterHook( jointPrefab);
         grappleHook.AddNewNode(playerObj);
@@ -81,32 +83,11 @@ public class GrappleController : MonoBehaviour
 
     void Update()
     {
-        // Handle input for grapple hook creation (if needed)
-        /*
-        if (Input.GetKeyDown(KeyCode.G)) // Example key press for testing
-        {
-            CreateGrappleHook(hookPointPrefab);
-        }
-        */
-
-        if ((Input.GetMouseButtonUp(0) || Input.GetKeyDown(KeyCode.K)) && isActiv)
-        {
-            ispressed = false;
-        }
-
-        if ((Input.GetMouseButtonDown(0)|| Input.GetKeyDown(KeyCode.K))&& !isActiv)
-        {
-            ispressed = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.B)){
-            Debug.Break();
-        }
-
+        
 
   
         
-        grap.hooked = isActiv;
+        //grap.hooked = isActiv;
         //Debug.Log(isActiv);
         /*
         if (!ispressed)
@@ -158,7 +139,7 @@ public class GrappleController : MonoBehaviour
         
 
         //    Debug.Log(grappleHook.GetTail().GetObj().name);
-        if (isActiv){
+        if (playerState.isGrappleHook){
             //CheckAndAdjustDistanceSum(ropeLength);
 
             NewBetterHook.Node rover = currNode.GetRightNode();
@@ -470,7 +451,7 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
     // New activation function
     public void ActivateHookConnection(GameObject targetHookPoint)
     {
-        if (!isActiv)
+        if (!playerState.isGrappleHook)
     {
         //CreateGrappleHook(this.gameObject, targetHookPoint);
         //grappleHook.AddNewNode(targetHookPoint);
@@ -489,7 +470,7 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
 
         if (playerObj != null && targetHookPoint != null)
         {
-            isHooked = true;
+            //isHooked = true;
             // Check if the player already has a DistanceJoint2D and remove it if it exists
             DistanceJoint2D existingJoint = playerObj.GetComponent<DistanceJoint2D>();
             if (existingJoint != null)
@@ -517,7 +498,7 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
             playerJoint.autoConfigureDistance = false;
             playerJoint.maxDistanceOnly =true;
 
-            isActiv = true;
+            playerState.isGrappleHook = true;
 
             sentail = grappleHook.GetTail().GetRightNode();
             currNode = sentail.GetRightNode();
@@ -541,12 +522,12 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
    public void DeactivateHookConnection()
 {
     // Check if the grapple hook is active
-    if (isActiv)
+    if (playerState.isGrappleHook)
     {
 
         spriteRenderer.color = new Color(1, 1, 1);
         // Reset the 'isActiv' flag
-        isActiv = false;
+        playerState.isGrappleHook = false;
 
         // Disable the DistanceJoint2D on the player if it exists
         DistanceJoint2D playerJoint = playerObj.GetComponent<DistanceJoint2D>();

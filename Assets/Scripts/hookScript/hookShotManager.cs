@@ -8,14 +8,15 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine.UIElements;
 using Unity.Burst.Intrinsics;
+using Unity.VisualScripting;
 
 public class hookShotManager : MonoBehaviour
 {
-    public bool hooked = false;
+    //public bool hooked = false;
 
-    public bool grappledHooked = false;
+    //public bool grappledHooked = false;
 
-    public bool canHook = true;
+    //public bool canHook = true;
 
     public float distHook;
 
@@ -26,7 +27,7 @@ public class hookShotManager : MonoBehaviour
 
     private Vector2 storedDirection;
 
-    private Vector2 movStoredDirection;
+    //private Vector2 movStoredDirection;
     public LayerMask hooks;
      //public LayerMask ground;
 
@@ -36,7 +37,7 @@ public class hookShotManager : MonoBehaviour
     private GameInput1 controls;
     public Movescript playerMoveState; // Updated from Movescript to PlayerMovement
 
-    public AutoGrappleManager autoManager;
+    //public AutoGrappleManager autoManager;
     public GameObject playerObject;
 
     private Vector2 hookedPoz;
@@ -52,16 +53,25 @@ public class hookShotManager : MonoBehaviour
     private bool isPaused = false;
 
     // LineRenderer to visualize the BoxCast
-    public LineRenderer lineRenderer;
+    private LineRenderer lineRenderer;
+
+    private playerStateScript playerState;
 
 
     private void Start()
     {
 
         playerMoveState =this .GetComponent<Movescript>();
-        autoManager = this.GetComponent<AutoGrappleManager>();
+        //autoManager = this.GetComponent<AutoGrappleManager>();
+
+        playerState = this.GetComponent<playerStateScript>();
 
         rb = playerObject.GetComponent<Rigidbody2D>();
+
+        lineRenderer = this.GetComponent<LineRenderer>();
+        
+        lineRenderer.startWidth =widthHook;
+        lineRenderer.endWidth =widthHook;
 
     
     }
@@ -69,8 +79,7 @@ public class hookShotManager : MonoBehaviour
         private void OnEnable()
     {
         controls.Enable();
-        controls.Player.HookShot.performed += InputCheak; 
-        controls.Player.HookShot.canceled += DeInputCheak;
+        controls.Player.HookShot.performed += _ => Hook();
 
         controls.Player.Movement.performed += ActiveMove;
         controls.Player.Movement.canceled += DeActiveMove;
@@ -81,8 +90,10 @@ public class hookShotManager : MonoBehaviour
     private void OnDisable()
     {
         controls.Disable();
-        controls.Player.HookShot.performed -= InputCheak; 
-        controls.Player.HookShot.canceled -= DeInputCheak;
+        
+
+        controls.Player.Movement.performed -= ActiveMove; 
+        controls.Player.Movement.canceled -= DeActiveMove;
     }
 
     
@@ -90,35 +101,30 @@ public class hookShotManager : MonoBehaviour
     private void FixedUpdate()
     {
 
-        grappledHooked = autoManager.hooked;
-
+        //grappledHooked = playerState.isHookShot;
+        /*
         if ( storedDirection.magnitude >0.1f){
             Debug.Log("idk it happening");
             Hook();
         }
+        */
         
-        if (playerMoveState.conSidedGround  ){
-            StopBoxCast();
-            canHook = true;
+        if (playerState.conSidedGround  ){
+            //StopBoxCast();
+            //playerState.canHookShot = true;
         }
  
 
 
 
-        if ( hooked){
-            canHook =false;
+        if ( playerState.isHookShot){
+            playerState.canHookShot =false;
             Debug.Log("movingVelo");
             float distance = Vector2.Distance(this.rb.transform.position, hookObj.transform.position);
             this.rb.transform.position =  Vector2.MoveTowards(transform.position, hookObj.transform.position, distance%100);
             this.rb.transform.position = hookObj.transform.position;
-
-            // Check if the object is close enough to the target
-            
-            if (distance <= 0.1f) // Use a small threshold, e.g., 0.1 units
-            {
-                PauseGame();
-
-            }
+            //Hook();
+            PauseGame();
         }
         
     }
@@ -129,95 +135,90 @@ public class hookShotManager : MonoBehaviour
         //controls.Player.JHook.performed += _ => Hook();
     }
 
-    private void InputCheak(InputAction.CallbackContext value)
-    {
-        lineRenderer.enabled = true;
-        Debug.Log(value.ReadValue<Vector2>());
-        storedDirection = value.ReadValue<Vector2>();
-        hookcastDir = storedDirection.normalized;
-
-         if ( !hooked  && ! grappledHooked && canHook){
-
-                RaycastHit2D hit = PerformBoxCast(hookcastDir);
-
-
-                if (hit.collider != null ){
-                    Debug.Log(hit.collider.gameObject.name);
-                    if ( hit.collider.gameObject.GetComponent<Rigidbody2D>() == null){
-                        Rigidbody2D collidRigd = hit.collider.gameObject.AddComponent<Rigidbody2D>();
-                        collidRigd.freezeRotation= true;
-                        collidRigd.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
-                        
-                    }
-                    lineRenderer.SetPosition(1, hit.collider.gameObject.GetComponent<Rigidbody2D>().transform.position);
-                
-                    GameObject hitPosition = hit.collider.gameObject;
-                    hookedPoz = hit.collider.gameObject.GetComponent<Rigidbody2D>().transform.position;
-                    hookObj = hit.collider.gameObject;
-                    //actHook(hitPosition);
-                    hooked =true;
-                    canHook = false;
-                }
-                DrawBoxCast(value.ReadValue<Vector2>());  
-
-            }
-
-        
-    }
-
-    private void DeInputCheak(InputAction.CallbackContext value){
-        storedDirection =  Vector2.zero;
-        lineRenderer.enabled = false;
-        
-         
-    }
-
        public void DeActiveMove(InputAction.CallbackContext value)
     {
-        movStoredDirection = Vector2.zero;
+        storedDirection = Vector2.zero;
     }
 
 
     public void ActiveMove(InputAction.CallbackContext value)
     {
-    // Read the input vector
-    movStoredDirection = value.ReadValue<Vector2>();
+        // Read the input vector
+        //movStoredDirection = value.ReadValue<Vector2>();
 
-    if (isPaused)
-    {
-        // Normalize the direction vector to ensure consistent movement speed
-        if (movStoredDirection.magnitude > 0.1f) // Add a threshold to avoid jitter from small input
+        storedDirection = value.ReadValue<Vector2>();
+        hookcastDir = storedDirection.normalized;
+
+        
+
+        if (isPaused && playerState.isHookShot)
         {
-            Vector2 normalizedDirection = movStoredDirection.normalized;
-            Dash(normalizedDirection, rb.velocity); // Call Dash with normalized direction
-            ResumeGame(); // Resume the game after handling input
-            canHook = true;
-        }
-        else
-        {
-            Debug.Log("No significant input detected.");
-        }
-    } //Debug.Log("applied storedDirection: " + storedDirection);
+            // Normalize the direction vector to ensure consistent movement speed
+            if (storedDirection.magnitude > 0.1f) // Add a threshold to avoid jitter from small input
+            {
+                Vector2 normalizedDirection = storedDirection.normalized;
+                Dash(normalizedDirection, rb.velocity); // Call Dash with normalized direction
+                ResumeGame(); // Resume the game after handling input
+                
+            }
+            else
+            {
+                Debug.Log("No significant input detected.");
+            }
+        } //Debug.Log("applied storedDirection: " + storedDirection);
     }
 
 
 
     private void Hook()
     { 
-        Debug.Log("hooking, "+ canHook);
+        Debug.Log("hooking, "+ playerState.canHookShot);
+        
 
-        if (!hooked && !isBoxCasting && canHook )
-        {
-            Debug.Log("isBoxCaseing, "+ canHook);
-            // Start the BoxCast for 3 seconds
-            hookcastDir = storedDirection.normalized;
-            //canHook = false;
-            boxCastTimer = 0f ; // Reset timer
-            isBoxCasting = true; 
+        if ( !playerState.isHookShot  && !playerState.isGrappleHook && playerState.canHookShot){
+
+            RaycastHit2D hit = PerformBoxCast(hookcastDir);
+
+            //DrawBoxCast(hookcastDir);
+
+
+            if (hit.collider != null ){
+
+                Debug.Log(hit.collider.gameObject.name);
+                if ( hit.collider.gameObject.GetComponent<Rigidbody2D>() == null){
+                    Rigidbody2D collidRigd = hit.collider.gameObject.AddComponent<Rigidbody2D>();
+                    collidRigd.freezeRotation= true;
+                    collidRigd.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
+                    
+                }
+                lineRenderer.SetPosition(1, hit.collider.gameObject.GetComponent<Rigidbody2D>().transform.position);
+            
+                //GameObject hitPosition = hit.collider.gameObject;
+                hookedPoz = hit.collider.gameObject.GetComponent<Rigidbody2D>().transform.position;
+                hookObj = hit.collider.gameObject;
+                //actHook(hitPosition);
+                playerState.isHookShot =true;
+                playerState.canHookShot = false;
+            }
 
             
-            
+
         }
+
+
+
+        Debug.Log("isBoxCaseing, "+ playerState.canHookShot);
+        // Start the BoxCast for 3 seconds
+        hookcastDir = storedDirection.normalized;
+        //canHook = false;
+        boxCastTimer = 0f ; // Reset timer
+        isBoxCasting = true; 
+
+        lineRenderer.enabled = false;
+
+        
+        
+        
     }
 
     // Start the BoxCast duration timer
@@ -239,8 +240,7 @@ public class hookShotManager : MonoBehaviour
     // Perform a BoxCast and return the hit result
     private RaycastHit2D PerformBoxCast(Vector2 inputDirection)
     {
-        lineRenderer.startWidth =widthHook;
-        lineRenderer.endWidth =widthHook;
+        DrawBoxCast(inputDirection);
         // Perform the BoxCast using stored direction and size
         RaycastHit2D hit = Physics2D.BoxCast(rb.position, new Vector2(widthHook, widthHook), 0f, inputDirection,distHook, hooks);
         return hit;
@@ -250,8 +250,13 @@ public class hookShotManager : MonoBehaviour
     // Visualize the BoxCast with a LineRenderer
     private void DrawBoxCast(Vector2 dirHook)
     {
+        lineRenderer.enabled = true;
+
+        lineRenderer.startWidth =widthHook;
+        lineRenderer.endWidth =widthHook;
+
         lineRenderer.SetPosition(0, rb.position);
-        if (hooked){
+        if (playerState.isHookShot){
             //lineRenderer.SetPosition(1, hookedPoz);
             
             lineRenderer.SetPosition(1, hookObj.transform.position);
@@ -280,10 +285,10 @@ public class hookShotManager : MonoBehaviour
         rb.velocity = Vector2.zero;
 
         ResumeGame();
-        hooked = false;
+        playerState.isHookShot = false;
 
-        autoManager.hooked = false;
-        autoManager.canHook = true;
+        playerState.isHookShot = false;
+        playerState.canGrappleHook = true;
 
 
         // ResumeGame is called from InputCheck once input is detected

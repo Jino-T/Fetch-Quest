@@ -152,7 +152,7 @@ public class GrappleManager : MonoBehaviour
     private void Awake()
     {
         controls = new GameInput1();
-        controls.Player.JHook.performed += _ => Hook();
+        controls.Player.Jump.performed += _ => Hook();
     }
 
     private void InputCheak(InputAction.CallbackContext value)

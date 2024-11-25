@@ -37,9 +37,18 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""JHook"",
+                    ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""7d4a309a-954f-4f0b-beae-a13e91b4554e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""JumpHold"",
+                    ""type"": ""Button"",
+                    ""id"": ""c93fc5d7-a0be-4a67-9d31-c8a56086eaa1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -56,12 +65,12 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""HookShot"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""973b9a44-28d8-485c-aefc-467e1441c21a"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -182,7 +191,7 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
                     ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""JHook"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -193,7 +202,7 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""JHook"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -204,7 +213,7 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""JHook"",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -284,6 +293,28 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
                     ""action"": ""HookShot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3d2a8ef5-1599-40a8-906e-3d40f8a1bf7a"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HookShot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""99315fd7-e54c-4b3c-878f-54eb8a9a2a71"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""JumpHold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -293,7 +324,8 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
-        m_Player_JHook = m_Player.FindAction("JHook", throwIfNotFound: true);
+        m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_JumpHold = m_Player.FindAction("JumpHold", throwIfNotFound: true);
         m_Player_Slide = m_Player.FindAction("Slide", throwIfNotFound: true);
         m_Player_HookShot = m_Player.FindAction("HookShot", throwIfNotFound: true);
     }
@@ -358,7 +390,8 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Movement;
-    private readonly InputAction m_Player_JHook;
+    private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_JumpHold;
     private readonly InputAction m_Player_Slide;
     private readonly InputAction m_Player_HookShot;
     public struct PlayerActions
@@ -366,7 +399,8 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
         private @GameInput1 m_Wrapper;
         public PlayerActions(@GameInput1 wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
-        public InputAction @JHook => m_Wrapper.m_Player_JHook;
+        public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @JumpHold => m_Wrapper.m_Player_JumpHold;
         public InputAction @Slide => m_Wrapper.m_Player_Slide;
         public InputAction @HookShot => m_Wrapper.m_Player_HookShot;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -381,9 +415,12 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
-            @JHook.started += instance.OnJHook;
-            @JHook.performed += instance.OnJHook;
-            @JHook.canceled += instance.OnJHook;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+            @JumpHold.started += instance.OnJumpHold;
+            @JumpHold.performed += instance.OnJumpHold;
+            @JumpHold.canceled += instance.OnJumpHold;
             @Slide.started += instance.OnSlide;
             @Slide.performed += instance.OnSlide;
             @Slide.canceled += instance.OnSlide;
@@ -397,9 +434,12 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
-            @JHook.started -= instance.OnJHook;
-            @JHook.performed -= instance.OnJHook;
-            @JHook.canceled -= instance.OnJHook;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+            @JumpHold.started -= instance.OnJumpHold;
+            @JumpHold.performed -= instance.OnJumpHold;
+            @JumpHold.canceled -= instance.OnJumpHold;
             @Slide.started -= instance.OnSlide;
             @Slide.performed -= instance.OnSlide;
             @Slide.canceled -= instance.OnSlide;
@@ -426,7 +466,8 @@ public partial class @GameInput1: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMovement(InputAction.CallbackContext context);
-        void OnJHook(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnJumpHold(InputAction.CallbackContext context);
         void OnSlide(InputAction.CallbackContext context);
         void OnHookShot(InputAction.CallbackContext context);
     }

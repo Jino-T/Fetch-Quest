@@ -33,9 +33,12 @@ public class Movescript : MonoBehaviour
     public float airDrag;
 
     //public bool isMoving = false;
-    public bool hooked;
+    //public bool hooked;
 
     public GrappleManager grappleManager;
+
+    private playerStateScript playerState;
+
     public Rigidbody2D rb;
 
     private GameInput1 controls;
@@ -48,7 +51,7 @@ public class Movescript : MonoBehaviour
 
     private Vector2 storedDirection = Vector2.zero;
 
-    public bool isJumping = false;
+    //public bool isJumping = false;
     public bool holdJump = false;
     private bool pushingJump = false;
     private bool slideRequested = false;
@@ -63,8 +66,7 @@ public class Movescript : MonoBehaviour
 
     // cytotec time
 
-    public int cytotecFames;
-    private int currCFames =0;
+
     public bool conSidedGround = false;
     
 
@@ -79,12 +81,14 @@ public class Movescript : MonoBehaviour
         grappleManager = this.GetComponent<GrappleManager>();
         jumpBuffTimer = this.AddComponent<Timer>();
         jumpBuffTimer.Initialize(true, timeBuffTime );
+
+        playerState = this.GetComponent<playerStateScript>();
         
     }
 
     private void Update()
     {
-        hooked = grappleManager.hooked;
+        //hooked = grappleManager.hooked;
     }
 
     private void OnEnable()
@@ -93,8 +97,8 @@ public class Movescript : MonoBehaviour
         controls.Player.Movement.performed += ActiveMove;
         controls.Player.Movement.canceled += DeActiveMove;
 
-        controls.Player.JHook.performed += ActiveJump;
-        controls.Player.JHook.canceled += DeActiveJump;
+        controls.Player.Jump.performed += ActiveJump;
+        controls.Player.Jump.canceled += DeActiveJump;
 
         controls.Player.Slide.performed += StartSlide;
     }
@@ -115,21 +119,21 @@ public class Movescript : MonoBehaviour
     // Update jumping state
     if (pushingJump  )
     {
-        if (!conSidedGround && isJumping){
+        if (!playerState.conSidedGround && playerState.isJumping){
             HandleJump();
 
         }
     }else{
         if(grounded ){
-            isJumping = false;
+            playerState.isJumping = false;
             jumpHoldTimer = maxJumpHoldTime;
 
         }
     }
 
-    if (conSidedGround && !jumpBuffTimer.IsFinished()){
+    if (playerState.conSidedGround && !jumpBuffTimer.IsFinished()){
         rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Apply initial jump force
-        isJumping =true;
+        playerState.isJumping =true;
         jumpHoldTimer = 0f;
         isSliding = false;
         jumpBuffTimer.EndTimer();
@@ -139,22 +143,6 @@ public class Movescript : MonoBehaviour
     
 
     // Update "considered ground" frames for leniency
-    if (grounded)
-    {
-        conSidedGround = true;
-        currCFames = cytotecFames;
-    }
-    else
-    {
-        if (currCFames > 0 && conSidedGround && !isJumping)
-        {
-            currCFames -= 1;
-        }
-        else
-        {
-            conSidedGround = false;
-        }
-    }
 
     HandleMovement();
 }
@@ -188,9 +176,9 @@ public class Movescript : MonoBehaviour
 
     public void ActiveJump(InputAction.CallbackContext context)
     {
-        if (conSidedGround ){
+        if (playerState.conSidedGround ){
             rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Apply initial jump force
-            isJumping =true;
+            playerState.isJumping =true;
             jumpHoldTimer = 0f;
             isSliding = false;
             jumpBuffTimer.EndTimer();
@@ -216,7 +204,7 @@ public class Movescript : MonoBehaviour
 
     public void StartSlide(InputAction.CallbackContext context)
     {
-        if (conSidedGround)
+        if (playerState.conSidedGround)
         {
             slideRequested = true;
             slideTimer = slideDuration; // Start the slide timer
@@ -228,12 +216,12 @@ public class Movescript : MonoBehaviour
     private void HandleMovement()
     {
 
-        if (conSidedGround)
+        if (playerState.conSidedGround)
         {
             HandleGroundedMovement();
             //HandleJump();
         }
-        else if (!hooked)
+        else if (!playerState.isGrappleHook)
         {
             HandleAirborneMovement();
         }
@@ -328,7 +316,7 @@ public class Movescript : MonoBehaviour
 
     private void HandleJump()
     {
-        if(holdJump && isJumping && rb.velocity.y >0 &&  jumpHoldTimer < maxJumpHoldTime){
+        if(holdJump && playerState.isJumping && rb.velocity.y >0 &&  jumpHoldTimer < maxJumpHoldTime){
 
 
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + jumpHoldForceScale * Time.fixedDeltaTime);
@@ -359,7 +347,7 @@ private void OnTriggerStay2D(Collider2D other)
     //Debug.Log( other.CompareTag("wall"));
  
 
-   if (  isJumping &&  ((other.CompareTag("ground") && other.transform.position.y >= (this.transform.position.y +  GetSpecificCapsuleCollider(0).bounds.size.y)) || other.CompareTag("wall")) )
+   if (  playerState.isJumping &&  ((other.CompareTag("ground") && other.transform.position.y >= (this.transform.position.y +  GetSpecificCapsuleCollider(0).bounds.size.y)) || other.CompareTag("wall")) )
     {
         
 

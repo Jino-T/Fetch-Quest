@@ -15,9 +15,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "JHook",
+                    "name": "Jump",
                     "type": "Button",
                     "id": "7d4a309a-954f-4f0b-beae-a13e91b4554e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "JumpHold",
+                    "type": "Button",
+                    "id": "c93fc5d7-a0be-4a67-9d31-c8a56086eaa1",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -34,12 +43,12 @@
                 },
                 {
                     "name": "HookShot",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "973b9a44-28d8-485c-aefc-467e1441c21a",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -160,7 +169,7 @@
                     "interactions": "Press",
                     "processors": "",
                     "groups": "",
-                    "action": "JHook",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -171,7 +180,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "JHook",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -182,7 +191,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "JHook",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -262,6 +271,28 @@
                     "action": "HookShot",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "3d2a8ef5-1599-40a8-906e-3d40f8a1bf7a",
+                    "path": "<Keyboard>/j",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HookShot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "99315fd7-e54c-4b3c-878f-54eb8a9a2a71",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "JumpHold",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
