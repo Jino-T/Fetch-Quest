@@ -6,14 +6,19 @@ using Unity.Mathematics;
 using UnityEngine.SceneManagement;
 using System;
 
-public class autoGrappleManager : MonoBehaviour
+public class holdAutoGrappleManager : MonoBehaviour
 {
-    public float hookDrag;
-    public int hookType;
+    //public float hookDrag;
+    //public int hookType;
     //public bool hooked;
 
     //public bool canHook;
-    public bool mouseAct = false;
+
+    public bool pressedJump;
+
+    public bool holdingJump;
+
+    //public bool mouseAct = false;
 
     //public float distHook;
 
@@ -29,7 +34,7 @@ public class autoGrappleManager : MonoBehaviour
 
     private Rigidbody2D rb;
     private GameInput1 controls;
-    public Movescript playerMoveState; // Updated from Movescript to PlayerMovement
+    private Movescript playerMoveState; // Updated from Movescript to PlayerMovement
 
     private playerStateScript playerState;
     //public GameObject playerObject;
@@ -43,7 +48,7 @@ public class autoGrappleManager : MonoBehaviour
     private bool isBoxCasting = false; // Flag to track whether BoxCast is active
 
     // LineRenderer to visualize the BoxCast
-    public LineRenderer lineRenderer;
+    private LineRenderer lineRenderer;
 
 
     private void Start()
@@ -75,14 +80,22 @@ public class autoGrappleManager : MonoBehaviour
         controls.Player.Movement.performed += InputCheak; 
         controls.Player.Movement.canceled += DeInputCheak;
 
+        controls.Player.JumpHold.performed += JumpInputCheak;
+        controls.Player.JumpHold.canceled += JumpDeInputCheak;
+
         
     }
+
+    
 
     private void OnDisable()
     {
         controls.Disable();
         controls.Player.Movement.performed -= InputCheak; 
         controls.Player.Movement.canceled -= DeInputCheak;
+
+        controls.Player.Jump.performed -= JumpInputCheak;
+        controls.Player.Jump.canceled -= JumpDeInputCheak;
     }
 
     
@@ -92,7 +105,7 @@ public class autoGrappleManager : MonoBehaviour
         
         if (playerState.conSidedGround && !playerState.isGrappleHook ){
             StopBoxCast();
-            //playerState.canGrappleHook = true;
+            playerState.canGrappleHook = true;
         }
 
 
@@ -120,8 +133,8 @@ public class autoGrappleManager : MonoBehaviour
 
 
                 if (hit != null ){
-                    DrawBoxCast();
-                    lineRenderer.enabled= true;
+                    //DrawBoxCast();
+                    
                     playerState.canGrappleHook = false;
                     Debug.Log(hit.gameObject.name);
                     if ( hit.gameObject.GetComponent<Rigidbody2D>() == null){
@@ -148,13 +161,16 @@ public class autoGrappleManager : MonoBehaviour
         if ( playerState.isGrappleHook){
             DrawBoxCast();
             lineRenderer.enabled= true;
+        }else{
+            lineRenderer.enabled= false;
+
         }
     }
 
     private void Awake()
     {
         controls = new GameInput1();
-        controls.Player.Jump.performed += _ => Hook();
+        //controls.Player.Jump.performed += _ => Hook();
     }
 
     private void InputCheak(InputAction.CallbackContext value)
@@ -166,6 +182,33 @@ public class autoGrappleManager : MonoBehaviour
     private void DeInputCheak(InputAction.CallbackContext value){
          
          storedDirection = Vector2.zero;
+    }
+
+
+    private void JumpDeInputCheak(InputAction.CallbackContext context)
+    {
+        Debug.Log("off");
+        
+        pressedJump = false;
+        holdingJump =false;
+
+        if (playerState.isGrappleHook){
+            Hook();
+        }
+        
+        
+        
+    }
+
+    private void JumpInputCheak(InputAction.CallbackContext context)
+    {
+        if (!pressedJump){
+            pressedJump=true;
+            Hook();
+            
+        }
+        
+        
     }
 
 
@@ -244,6 +287,7 @@ public class autoGrappleManager : MonoBehaviour
     // Visualize the BoxCast with a LineRenderer
     private void DrawBoxCast()
     {
+
         lineRenderer.SetPosition(0, rb.position);
         if (playerState.isGrappleHook){
             //lineRenderer.SetPosition(1, hookedPoz);
