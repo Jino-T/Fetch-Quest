@@ -121,7 +121,7 @@ public class Timer : MonoBehaviour
 
     private void TimerFinished()
     {
-        Debug.Log("Timer finished!");
+        //Debug.Log("Timer finished!");
         // Add additional logic here if needed
     }
 }

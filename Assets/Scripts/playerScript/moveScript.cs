@@ -32,6 +32,20 @@ public class Movescript : MonoBehaviour
     public float groundDrag;
     public float airDrag;
 
+    public float grappleVeloMag;
+
+
+    public float groundCap;
+
+    public float airHorizontalCap;
+
+
+    public float airRisingCap;
+
+    public float airFallingCap;
+
+
+
     //public bool isMoving = false;
     //public bool hooked;
 
@@ -135,18 +149,78 @@ public class Movescript : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Apply initial jump force
         playerState.isJumping =true;
         jumpHoldTimer = 0f;
-        isSliding = false;
+        //isSliding = false;
         jumpBuffTimer.EndTimer();
         holdJump = true;
 
     }
+
+    if ( playerState.isGrounded){
+        if(  Mathf.Sign(rb.velocity.y)<1f  && Mathf.Sign(storedDirection.x) == Mathf.Sign(rb.velocity.x)){
+            if ( rb.velocity.magnitude > 13f && 2f > rb.velocity.y  && !playerState.isSliding){
+                playerState.isSliding = true;
+                rb.velocity = new Vector2((rb.velocity.magnitude * Mathf.Sign(rb.velocity.x)*0.3f) + rb.velocity.x , 0f);
+                //playerState.isSliding= true;
+                Debug.Log("lest go");
+
+            }else{
+                rb.velocity = new Vector2(rb.velocity.x, 0f);
+                playerState.isSliding = false;
+            }
+
+        }
+
+
+    }
+
     
 
     // Update "considered ground" frames for leniency
 
     HandleMovement();
+
+    CapVelocity();
+
+    //Debug.Log(rb.velocity.magnitude);
 }
 
+    private void CapVelocity()
+{
+    float verticalVect = rb.velocity.y;
+    float horisontalVect = rb.velocity.x;
+
+    if (playerState.conSidedGround)
+        {
+            // Clamp horizontal velocity when grounded
+            horisontalVect = Mathf.Clamp(rb.velocity.x, -groundCap, groundCap);
+        }
+        else
+        {
+            if ( !playerState.isGrappleHook){
+                // Clamp horizontal velocity in the air
+                horisontalVect = Mathf.Clamp(rb.velocity.x, -airHorizontalCap, airHorizontalCap);
+
+                // Clamp vertical velocity based on direction
+                if (rb.velocity.y > 0) // Rising
+                {
+                    verticalVect = Mathf.Clamp(rb.velocity.y, 0, airRisingCap);
+                }
+                else // Falling
+                {
+                    verticalVect = Mathf.Clamp(rb.velocity.y, -airFallingCap, 0);
+                }
+            }else{
+                Debug.Log(rb.velocity.magnitude);
+                rb.velocity = Vector2.ClampMagnitude(rb.velocity, grappleVeloMag);
+                Debug.Log(rb.velocity.magnitude );
+                Debug.Log("clap");
+            }
+            
+        }
+    rb.velocity = new Vector2(horisontalVect, verticalVect);
+
+        
+}
 
 
     public bool isGrounded()
@@ -251,10 +325,15 @@ public class Movescript : MonoBehaviour
         if (Mathf.Abs(storedDirection.x) > 0.1f)
         {
             if ( Mathf.Abs(rb.velocity.x) > 0f){
+                //Debug.Log(Mathf.Sign(storedDirection.x));
+
+                //Debug.Log(Mathf.Sign(storedDirection.x));
+
                 if (Mathf.Sign(storedDirection.x) == Mathf.Sign(rb.velocity.x) && Mathf.Abs(rb.velocity.x) > maxRunSpeed)
                 {
                     // Apply drag to reduce speed
-                    rb.velocity = new Vector2(rb.velocity.x - (groundDrag * Mathf.Sign(rb.velocity.x)), rb.velocity.y);
+                    rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+                    //Debug.Log("Over Max");
                 }
                 else
                 {

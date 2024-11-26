@@ -136,7 +136,7 @@ public class holdAutoGrappleManager : MonoBehaviour
                     //DrawBoxCast();
                     
                     playerState.canGrappleHook = false;
-                    Debug.Log(hit.gameObject.name);
+                    //Debug.Log(hit.gameObject.name);
                     if ( hit.gameObject.GetComponent<Rigidbody2D>() == null){
                         Rigidbody2D collidRigd = hit.gameObject.AddComponent<Rigidbody2D>();
                         collidRigd.freezeRotation= true;
@@ -187,7 +187,7 @@ public class holdAutoGrappleManager : MonoBehaviour
 
     private void JumpDeInputCheak(InputAction.CallbackContext context)
     {
-        Debug.Log("off");
+        //Debug.Log("off");
         
         pressedJump = false;
         holdingJump =false;

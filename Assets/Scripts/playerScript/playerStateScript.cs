@@ -10,6 +10,10 @@ public class playerStateScript : MonoBehaviour
 
     public bool pushingJump;
 
+    public bool isSliding;
+
+    public bool canSliding;
+
     public bool isGrounded;
 
     public bool conSidedGround;
@@ -60,6 +64,8 @@ public class playerStateScript : MonoBehaviour
                 conSidedGround = false;
             }
         }
+
+        canSliding = (conSidedGround  || isGrappleHook  ) && !isSliding && Mathf.Sign(this.gameObject.GetComponent<Rigidbody2D>().velocity.y) <0 || isHookShot;
         
     }
 

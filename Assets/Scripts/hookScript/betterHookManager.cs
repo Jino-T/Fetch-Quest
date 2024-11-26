@@ -561,7 +561,7 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
         //rover = grappleHook.GetTail();
         Printrover = null;
 
-        Debug.Log("Grapple deactivated.");
+        //Debug.Log("Grapple deactivated.");
     }
 }
 
