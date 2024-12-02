@@ -9,6 +9,8 @@ TagManager:
   - Key
   - ground
   - wall
+  - PlayerToObj
+  - ObjToPlayer
   layers:
   - Default
   - TransparentFX

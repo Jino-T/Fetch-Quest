@@ -33,6 +33,8 @@ public class hookShotManager : MonoBehaviour
 
     private Vector2 hookcastDir;
 
+    private Vector2 dashDireciton;
+
     private Rigidbody2D rb;
     private GameInput1 controls;
     public Movescript playerMoveState; // Updated from Movescript to PlayerMovement
@@ -44,13 +46,17 @@ public class hookShotManager : MonoBehaviour
 
     private GameObject hookObj;
 
-    public float hookSpeed = 10f;
+    public float hookAcc = 0.2f;
+
+    private float magVelocity;
 
     public float boxCastDuration = 3f; // Duration of the BoxCast
     private float boxCastTimer = 0f; // Timer to track the BoxCast duration
     public bool isBoxCasting = false; // Flag to track whether BoxCast is active
 
     private bool isPaused = false;
+
+    public bool hasJumped =false;
 
     // LineRenderer to visualize the BoxCast
     private LineRenderer lineRenderer;
@@ -84,6 +90,11 @@ public class hookShotManager : MonoBehaviour
         controls.Player.Movement.performed += ActiveMove;
         controls.Player.Movement.canceled += DeActiveMove;
 
+        controls.Player.Jump.performed += AcitveJump;
+        //controls.Player.Jump.canceled += DeActiveJump;
+
+
+
         
     }
 
@@ -94,9 +105,21 @@ public class hookShotManager : MonoBehaviour
 
         controls.Player.Movement.performed -= ActiveMove; 
         controls.Player.Movement.canceled -= DeActiveMove;
+
+        controls.Player.Jump.performed -= AcitveJump;
+        //controls.Player.Jump.canceled -= DeActiveJump;
     }
 
     
+
+    private void AcitveJump(InputAction.CallbackContext context)
+    {
+        hasJumped = true;
+    }
+    private void DeActiveJump(InputAction.CallbackContext context)
+    {
+        throw new NotImplementedException();
+    }
 
     private void FixedUpdate()
     {
@@ -113,18 +136,74 @@ public class hookShotManager : MonoBehaviour
             //StopBoxCast();
             //playerState.canHookShot = true;
         }
+
+        if( playerState.canHookShot){
+            dashDireciton = hookcastDir;
+            hasJumped = false;
+            magVelocity  = 0.5f;
+        }
  
 
 
 
         if ( playerState.isHookShot){
-            playerState.canHookShot =false;
+            
+            //Vector2 dashDireciton = hookcastDir;
+            //dashDireciton = hookcastDir;
+
+            if ( hookObj.tag == "PlayerToObj"){
+
+                playerState.canHookShot =false;
+                Debug.Log(dashDireciton);
+
+                Vector2 direction = ( this.hookObj.transform.position - this.rb.transform.position ).normalized;
+
+                Vector2 dirVec =  direction * magVelocity;
+
+                if ( !hasJumped){
+
+                    if (  Vector2.Distance(this.rb.transform.position,  hookObj.transform.position) >  hookObj.GetComponent<SpriteRenderer>().bounds.size.x){
+                        if ( dirVec.magnitude <20){
+                            magVelocity = hookAcc * magVelocity;
+                            this.rb.velocity= dirVec;
+                        }
+                        
+                    }else if ( Vector2.Distance(this.rb.transform.position,  hookObj.transform.position) < hookObj.GetComponent<SpriteRenderer>().bounds.size.x){
+                        this.rb.transform.position =  hookObj.transform.position;
+                        playerState.isHookShot = false;
+                        //playerState.isHookShot = false;
+                        playerState.canGrappleHook = true;
+                        
+                        
+                    }
+
+                }else{
+                    playerState.isHookShot = false;
+                    playerState.canGrappleHook = true;
+                }
+
+            }
+
+            if (hookObj.tag == "ObjToPlayer"){
+                //this.rb.transform.position =  hookObj.transform.position;
+                Dash( dashDireciton,8f);
+
+            }
+            
+            
+            
+             
+
+
+
+            /*
             Debug.Log("movingVelo");
             float distance = Vector2.Distance(this.rb.transform.position, hookObj.transform.position);
             this.rb.transform.position =  Vector2.MoveTowards(transform.position, hookObj.transform.position, distance%100);
             this.rb.transform.position = hookObj.transform.position;
             //Hook();
-            PauseGame();
+            */
+            
         }
         
     }
@@ -147,10 +226,11 @@ public class hookShotManager : MonoBehaviour
         //movStoredDirection = value.ReadValue<Vector2>();
 
         storedDirection = value.ReadValue<Vector2>();
+        //dashDireciton =  storedDirection;
         hookcastDir = storedDirection.normalized;
 
-        
 
+        /*
         if (isPaused && playerState.isHookShot)
         {
             // Normalize the direction vector to ensure consistent movement speed
@@ -166,7 +246,11 @@ public class hookShotManager : MonoBehaviour
                 Debug.Log("No significant input detected.");
             }
         } //Debug.Log("applied storedDirection: " + storedDirection);
+        */
+        
     }
+
+
 
 
 
@@ -279,20 +363,23 @@ public class hookShotManager : MonoBehaviour
         isPaused = false;
     }
 
-    private void Dash(Vector2 direction, Vector2 storeVelcoiy)
+    private void Dash(Vector2 direction, float dashBoost)
     {
         // Pause the game and wait for input
-        rb.velocity = Vector2.zero;
+        //rb.velocity = Vector2.zero;
 
-        ResumeGame();
-        playerState.isHookShot = false;
-
-        playerState.isHookShot = false;
-        playerState.canGrappleHook = true;
+        //ResumeGame();
+        
 
 
         // ResumeGame is called from InputCheck once input is detected
-        this.rb.velocity = direction.normalized * (storeVelcoiy.magnitude+ dashBust);
+        rb.velocity = rb.velocity + direction.normalized * dashBoost ;
+        //direction.normalized * dashBust + playerObject.
+
+        playerState.isHookShot = false;
+
+        //playerState.isHookShot = false;
+        playerState.canGrappleHook = true;
 
     }
 

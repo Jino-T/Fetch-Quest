@@ -17,6 +17,9 @@ public class CameraFollow : MonoBehaviour
     private Vector3 rightCurrentVelocity = Vector3.zero; // Used for SmoothDamp
     private Vector3 leftCurrentVelocity = Vector3.zero;
 
+
+
+
     private void FixedUpdate()
     {
         if (active)

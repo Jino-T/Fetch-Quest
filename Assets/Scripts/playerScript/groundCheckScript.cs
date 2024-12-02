@@ -35,6 +35,7 @@ public class groundCheckScript : MonoBehaviour
         if (other.gameObject != this.gameObject && CheckLayerOrTag(other))
         {
             isGrouned = false;
+            Debug.Log("left");
         }
     }
 
