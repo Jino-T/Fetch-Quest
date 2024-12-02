@@ -24,7 +24,7 @@ public class LockedDoorScript : MonoBehaviour
         //Debug.Log(levelManager.GetComponent<levelManagerScript>().numKeys);
         //Debug.Log(levelManager.GetComponent<levelManagerScript>().numKeysHeld);
         if(!locked) {
-            SceneManager.LoadScene(nextScene);
+            
         }
     } 
 
@@ -32,18 +32,19 @@ public class LockedDoorScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         //if the collision is the key and the player is holding all the keys in the level
         if (other.gameObject.CompareTag("Player") && 
-            levelManager.GetComponent<levelManagerScript>().numKeys == levelManager.GetComponent<levelManagerScript>().numKeysHeld) {
-            locked = false;
-            GameObject.Find("LockedDoor").GetComponent<SpriteRenderer>().color = new Color(0, 0, 0);
+            levelManager.GetComponent<levelManagerScript>().canExit) {
+            SceneManager.LoadScene(nextScene);
         }
     }
 
     //Gets called when collider leaves door. We may need this for animation or scene change logic.
+    /*
     private void OnTriggerExit2D(Collider2D other) {
         if (other.gameObject.CompareTag("Key")) { 
             locked = true;
-            GameObject.Find("LockedDoor").GetComponent<SpriteRenderer>().color = new Color(92, 64, 51);
+            this.gameObject.GetComponent<SpriteRenderer>().color = new Color(92, 64, 51);
         }
     }
+    */
         
 }

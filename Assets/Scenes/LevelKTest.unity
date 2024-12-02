@@ -263,8 +263,10 @@ GameObject:
   - component: {fileID: 379258261}
   - component: {fileID: 379258260}
   - component: {fileID: 379258263}
+  - component: {fileID: 379258264}
+  - component: {fileID: 379258265}
   m_Layer: 12
-  m_Name: Square (1)
+  m_Name: lever
   m_TagString: ObjToPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,6 +411,31 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &379258264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379258259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2d1542b05f44908992dd673d6e7f66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &379258265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379258259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db468179b36b745ba96eaf119aaf2a9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 0
 --- !u!1 &436656909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,7 +1270,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2472882882107942707, guid: 2e8ecd96b6a52408983080542649c237, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -133.39993
+      value: -133.3999
       objectReference: {fileID: 0}
     - target: {fileID: 3322383054876059407, guid: 2e8ecd96b6a52408983080542649c237, type: 3}
       propertyPath: m_Name
@@ -9276,7 +9303,7 @@ GameObject:
   - component: {fileID: 1285619689}
   - component: {fileID: 1285619690}
   m_Layer: 10
-  m_Name: PlayerManager
+  m_Name: GameManager
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9309,8 +9336,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d04e96c84759ced50a4ce9e143f65eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasKeys: 0
+  hasLevers: 1
   numKeys: 2
   numKeysHeld: 0
+  canExit: 0
 --- !u!1 &1361917924
 GameObject:
   m_ObjectHideFlags: 0
@@ -10378,6 +10408,10 @@ PrefabInstance:
       propertyPath: widthHook
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 924290486618522348, guid: ec73b479c8473460a883403a0a407722, type: 3}
+      propertyPath: levelManger
+      value: 
+      objectReference: {fileID: 1285619686}
     - target: {fileID: 1699409317456656965, guid: ec73b479c8473460a883403a0a407722, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -10431,6 +10465,10 @@ PrefabInstance:
       value: -0.459
       objectReference: {fileID: 0}
     - target: {fileID: 3900332620292889354, guid: ec73b479c8473460a883403a0a407722, type: 3}
+      propertyPath: mouseAct
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3900332620292889354, guid: ec73b479c8473460a883403a0a407722, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
@@ -10457,6 +10495,10 @@ PrefabInstance:
     - target: {fileID: 6314797804660092895, guid: ec73b479c8473460a883403a0a407722, type: 3}
       propertyPath: airHorizontalCap
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6639909629223130981, guid: ec73b479c8473460a883403a0a407722, type: 3}
+      propertyPath: mouseAct
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7554666134608476435, guid: ec73b479c8473460a883403a0a407722, type: 3}
       propertyPath: m_Mass
