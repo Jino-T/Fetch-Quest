@@ -17,6 +17,7 @@ public class hookShotManager : MonoBehaviour
     //public bool grappledHooked = false;
 
     //public bool canHook = true;
+    public GameObject levelManger;
 
     public float distHook;
 
@@ -64,10 +65,12 @@ public class hookShotManager : MonoBehaviour
     private playerStateScript playerState;
 
 
+
+
     private void Start()
     {
 
-        playerMoveState =this .GetComponent<Movescript>();
+        playerMoveState =this.GetComponent<Movescript>();
         //autoManager = this.GetComponent<AutoGrappleManager>();
 
         playerState = this.GetComponent<playerStateScript>();
@@ -186,6 +189,8 @@ public class hookShotManager : MonoBehaviour
 
             if (hookObj.tag == "ObjToPlayer"){
                 //this.rb.transform.position =  hookObj.transform.position;
+                levelManger.GetComponent<levelManagerScript>().activHookedObj(hookObj);
+
                 Dash( dashDireciton,8f);
 
             }
