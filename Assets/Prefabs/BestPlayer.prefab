@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 6816933423998085362}
   - component: {fileID: 3426453267352212336}
   - component: {fileID: 4248870927156877580}
+  - component: {fileID: 6401386545880907496}
   m_Layer: 10
   m_Name: BestPlayer
   m_TagString: Player
@@ -563,6 +564,8 @@ MonoBehaviour:
   airFallingCap: 18
   grappleManager: {fileID: 3061645747885917488}
   rb: {fileID: 765026943714449800}
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
   holdJump: 0
   killTag: KillTag
   killLayer:
@@ -663,3 +666,24 @@ CapsuleCollider2D:
   m_Offset: {x: 0.0042057037, y: -0.02602911}
   m_Size: {x: 0.76467514, y: 1.0178022}
   m_Direction: 0
+--- !u!95 &6401386545880907496
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6762952205910139449}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 281bf33909d7940e8bca3822c4ceb47f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

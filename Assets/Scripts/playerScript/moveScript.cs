@@ -57,6 +57,10 @@ public class Movescript : MonoBehaviour
 
     private GameInput1 controls;
 
+    public Animator animator;
+
+    public SpriteRenderer spriteRenderer;
+
     /// <summary>
     //public LayerMask groundLayer;
     /// </summary>
@@ -95,9 +99,8 @@ public class Movescript : MonoBehaviour
         grappleManager = this.GetComponent<GrappleManager>();
         jumpBuffTimer = this.AddComponent<Timer>();
         jumpBuffTimer.Initialize(true, timeBuffTime );
-
         playerState = this.GetComponent<playerStateScript>();
-        
+        animator = this.GetComponent<Animator>();
     }
 
     private void Update()
@@ -129,7 +132,16 @@ public class Movescript : MonoBehaviour
     void FixedUpdate()
     {
     bool grounded = isGrounded();
+    animator.SetFloat("Movement", math.abs(storedDirection.x));
 
+        if (storedDirection.x > 0)
+    {
+        spriteRenderer.flipX = false; // Facing right
+    }
+    else if (storedDirection.x < 0)
+    {
+        spriteRenderer.flipX = true; // Facing left
+    }
     // Update jumping state
     if (pushingJump  )
     {
@@ -240,6 +252,7 @@ public class Movescript : MonoBehaviour
     public void ActiveMove(InputAction.CallbackContext value)
     {
         storedDirection = value.ReadValue<Vector2>();
+
         //Debug.Log("applied storedDirection: " + storedDirection);
     }
     
@@ -324,6 +337,7 @@ public class Movescript : MonoBehaviour
         
         if (Mathf.Abs(storedDirection.x) > 0.1f)
         {
+
             if ( Mathf.Abs(rb.velocity.x) > 0f){
                 //Debug.Log(Mathf.Sign(storedDirection.x));
 
