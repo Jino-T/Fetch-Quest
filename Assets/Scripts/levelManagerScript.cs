@@ -42,12 +42,21 @@ public class levelManagerScript : MonoBehaviour
         foreach (GameObject obj in hookableObjs ){
             
             if ( hasLevers && obj.name == "lever"){
-                Debug.Log("idk");
-                Debug.Log(obj.GetComponent<leverScript>());
+                //Debug.Log("idk");
+                //Debug.Log(obj.GetComponent<leverScript>());
                 leverScripts.AddLast(obj.GetComponent<leverScript>());
-                Debug.Log(leverScripts.First);
+                //Debug.Log(leverScripts.First);
             }
+
+            if (obj.name == "BestPlayer"){
+                Debug.Log("idk");
+                var hookShotManager = obj.GetComponent<hookShotManager>();
+                hookShotManager.levelManger = this.gameObject;
+            }
+            
         }
+
+        
 
         
     }
@@ -55,6 +64,9 @@ public class levelManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
+
         if (hasKeys){
             if ( numKeys == numKeysHeld){
                 collAllKeys = true;
@@ -101,5 +113,7 @@ public class levelManagerScript : MonoBehaviour
         if (hookedObj.name == "moveablePlatform"){
 
         }
+
+        
     }
 }

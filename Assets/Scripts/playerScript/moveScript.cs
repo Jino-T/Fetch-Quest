@@ -167,6 +167,9 @@ public class Movescript : MonoBehaviour
 
     }
 
+
+    //roll
+
     if ( playerState.isGrounded){
         if(  Mathf.Sign(rb.velocity.y)<1f  && Mathf.Sign(storedDirection.x) == Mathf.Sign(rb.velocity.x)){
             if ( rb.velocity.magnitude > 13f && 2f > rb.velocity.y  && !playerState.isSliding){
@@ -175,12 +178,14 @@ public class Movescript : MonoBehaviour
                 //playerState.isSliding= true;
                 Debug.Log("lest go");
 
-            }else{
-                rb.velocity = new Vector2(rb.velocity.x, 0f);
-                playerState.isSliding = false;
             }
 
         }
+
+
+        //if (  rb.velocity.y < 0.5){
+        //    rb.velocity = new Vector2(rb.velocity.x, 0f);
+        //}
 
 
     }
