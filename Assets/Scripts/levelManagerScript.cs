@@ -24,9 +24,13 @@ public class levelManagerScript : MonoBehaviour
 
     public bool canExit;
 
+    
+
     private GameObject[] hookableObjs;
 
     private LinkedList<leverScript> leverScripts = new LinkedList<leverScript>();
+
+    private LinkedList<GameObject> keyObjcsList = new LinkedList<GameObject>();
 
     
 
@@ -42,12 +46,28 @@ public class levelManagerScript : MonoBehaviour
         foreach (GameObject obj in hookableObjs ){
             
             if ( hasLevers && obj.name == "lever"){
-                Debug.Log("idk");
-                Debug.Log(obj.GetComponent<leverScript>());
+                //Debug.Log("idk");
+                //Debug.Log(obj.GetComponent<leverScript>());
                 leverScripts.AddLast(obj.GetComponent<leverScript>());
-                Debug.Log(leverScripts.First);
+                //Debug.Log(leverScripts.First);
             }
+
+            /*
+            if ( hasKeys && obj.name == "Key"){
+                keyManager targetScript = obj.GetComponent<keyManager>();
+                targetScript.levelManager = this.gameObject;
+            }
+            */
+
+            if (obj.name == "BestPlayer"){
+                Debug.Log("idk");
+                hookShotManager hookShotManager = obj.GetComponent<hookShotManager>();
+                hookShotManager.levelManger = this.gameObject;
+            }
+            
         }
+
+        
 
         
     }
@@ -55,6 +75,9 @@ public class levelManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
+
         if (hasKeys){
             if ( numKeys == numKeysHeld){
                 collAllKeys = true;
@@ -98,8 +121,12 @@ public class levelManagerScript : MonoBehaviour
             hookedObj.GetComponent<leverScript>().activate();
         }
 
-        if (hookedObj.name == "moveablePlatform"){
+        if (hookedObj.name.Substring(0, "PullHookPref".Length) == "PullHookPref"){
+            hookedObj.GetComponent<pullHook>().activate();
+
 
         }
+
+        
     }
 }

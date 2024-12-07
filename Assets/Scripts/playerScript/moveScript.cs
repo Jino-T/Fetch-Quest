@@ -167,20 +167,27 @@ public class Movescript : MonoBehaviour
 
     }
 
+
+    //roll
+
     if ( playerState.isGrounded){
-        if(  Mathf.Sign(rb.velocity.y)<1f  && Mathf.Sign(storedDirection.x) == Mathf.Sign(rb.velocity.x)){
-            if ( rb.velocity.magnitude > 13f && 2f > rb.velocity.y  && !playerState.isSliding){
+        if(  rb.velocity.y<0f  && Mathf.Sign(storedDirection.x) == Mathf.Sign(rb.velocity.x)){
+            //Debug.Log("was falling");
+            //Debug.Log("fall enough: "+  rb.velocity.magnitude > 13f);
+            if ( -13f > rb.velocity.y ){
                 playerState.isSliding = true;
                 rb.velocity = new Vector2((rb.velocity.magnitude * Mathf.Sign(rb.velocity.x)*0.3f) + rb.velocity.x , 0f);
                 //playerState.isSliding= true;
                 Debug.Log("lest go");
 
-            }else{
-                rb.velocity = new Vector2(rb.velocity.x, 0f);
-                playerState.isSliding = false;
             }
 
         }
+
+
+        //if (  rb.velocity.y < 0.5){
+        //    rb.velocity = new Vector2(rb.velocity.x, 0f);
+        //}
 
 
     }
@@ -222,10 +229,13 @@ public class Movescript : MonoBehaviour
                     verticalVect = Mathf.Clamp(rb.velocity.y, -airFallingCap, 0);
                 }
             }else{
-                Debug.Log(rb.velocity.magnitude);
-                rb.velocity = Vector2.ClampMagnitude(rb.velocity, grappleVeloMag);
-                Debug.Log(rb.velocity.magnitude );
-                Debug.Log("clap");
+                if (!playerState.isGrounded){
+                    Debug.Log(rb.velocity.magnitude);
+                    rb.velocity = Vector2.ClampMagnitude(rb.velocity, grappleVeloMag);
+                    Debug.Log(rb.velocity.magnitude );
+                    Debug.Log("clap");
+                }
+                
             }
             
         }
