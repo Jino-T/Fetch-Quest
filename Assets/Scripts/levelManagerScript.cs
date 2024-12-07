@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Video;
+using UnityEngine.SceneManagement;        
 
 public class levelManagerScript : MonoBehaviour
 {
@@ -30,10 +31,10 @@ public class levelManagerScript : MonoBehaviour
 
     private LinkedList<leverScript> leverScripts = new LinkedList<leverScript>();
 
-    private LinkedList<GameObject> keyObjcsList = new LinkedList<GameObject>();
-
-    
-
+    public Collider2D doorCollider;
+    public Collider2D playerCollider;
+    public Animator circleWipe;
+    public float transitionTime = 1f;
 
 
     // Start is called before the first frame update
@@ -92,7 +93,10 @@ public class levelManagerScript : MonoBehaviour
             hitAllLevers = hitLevers;
         }
 
-        
+        if (doorCollider.IsTouching(playerCollider)) {
+            Debug.Log("DOOR IS TOUCHING PLAYER");
+            LoadNextLevel();
+        }      
         
 
 
@@ -129,4 +133,22 @@ public class levelManagerScript : MonoBehaviour
 
         
     }
+
+    //Gets called when something collides with the door. This is where we can add scene change logic.
+    private void LoadNextLevel() {
+        if (canExit) {
+            StartCoroutine(loadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+        }
+    }
+
+    IEnumerator loadLevel(int levelIndex) {
+        //Play animation
+        circleWipe.SetTrigger("Start");
+
+        //wait
+        yield return new WaitForSeconds(transitionTime);
+
+        //load scene
+        SceneManager.LoadScene(levelIndex);        
+    } 
 }
