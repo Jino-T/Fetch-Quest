@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Video;
+using UnityEngine.SceneManagement; 
 
 public class levelManagerScript : MonoBehaviour
 {
@@ -24,6 +25,10 @@ public class levelManagerScript : MonoBehaviour
 
     public bool canExit;
 
+    public bool atExit =false;
+
+    public bool exiting =false;
+
     
 
     private GameObject[] hookableObjs;
@@ -31,6 +36,11 @@ public class levelManagerScript : MonoBehaviour
     private LinkedList<leverScript> leverScripts = new LinkedList<leverScript>();
 
     private LinkedList<GameObject> keyObjcsList = new LinkedList<GameObject>();
+
+    public Animator circleWipe;
+    public float transitionTime = 1f;
+
+    public int levelIndex = -1;
 
     
 
@@ -97,6 +107,12 @@ public class levelManagerScript : MonoBehaviour
 
 
         canExit = metAllConstion();
+
+        if( atExit && !exiting){
+            LoadNextLevel();
+            exiting =true;
+
+        }
     }
 
     private bool metAllConstion(){
@@ -121,7 +137,7 @@ public class levelManagerScript : MonoBehaviour
             hookedObj.GetComponent<leverScript>().activate();
         }
 
-        if (hookedObj.name.Substring(0, "PullHookPref".Length) == "PullHookPref"){
+        if (hookedObj.name.Length >= "PullHookPref".Length &&hookedObj.name.Substring(0, "PullHookPref".Length) == ( "PullHookPref")){
             hookedObj.GetComponent<pullHook>().activate();
 
 
@@ -129,4 +145,27 @@ public class levelManagerScript : MonoBehaviour
 
         
     }
+
+
+    private void LoadNextLevel() {
+        if (levelIndex == -1){
+            StartCoroutine(loadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+        }else{
+            StartCoroutine(loadLevel(levelIndex));
+        }
+        
+    }
+
+    IEnumerator loadLevel(int levelIndex) {
+        //Play animation
+        circleWipe.SetTrigger("Start");
+
+        //wait
+        yield return new WaitForSeconds(transitionTime);
+
+        //load scene
+        SceneManager.LoadScene(levelIndex);        
+    } 
+
+
 }
