@@ -9030,6 +9030,7 @@ MonoBehaviour:
   movX: 0
   movY: 1
   stopHooked: 0
+  movHooked: 1
   debugMode: 0
 --- !u!1 &1285619686 stripped
 GameObject:
@@ -9861,27 +9862,11 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 680006865465951130, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
   m_PrefabInstance: {fileID: 7010040879947996547}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &1733212857197635507
+--- !u!95 &1733212857197635507 stripped
 Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 1241854862734414164, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
+  m_PrefabInstance: {fileID: 7010040879947996547}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1733212857197635490}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 281bf33909d7940e8bca3822c4ceb47f, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &3254920493649540694
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10128,10 +10113,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6762952205910139449, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1733212857197635507}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
 --- !u!1001 &8226182659250265645
 PrefabInstance:
@@ -10206,13 +10188,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: lever
       objectReference: {fileID: 0}
+    - target: {fileID: 4431725464505127495, guid: 8e16d983ccd5f4aec85ce0ffba691904, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 1.3362638
+      objectReference: {fileID: 0}
+    - target: {fileID: 4431725464505127495, guid: 8e16d983ccd5f4aec85ce0ffba691904, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 1.3362638
+      objectReference: {fileID: 0}
     - target: {fileID: 8611636545179112121, guid: 8e16d983ccd5f4aec85ce0ffba691904, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.3
+      value: -24.81
       objectReference: {fileID: 0}
     - target: {fileID: 8611636545179112121, guid: 8e16d983ccd5f4aec85ce0ffba691904, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.12
+      value: -5.07
       objectReference: {fileID: 0}
     - target: {fileID: 8611636545179112121, guid: 8e16d983ccd5f4aec85ce0ffba691904, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10245,6 +10235,18 @@ PrefabInstance:
     - target: {fileID: 8611636545179112121, guid: 8e16d983ccd5f4aec85ce0ffba691904, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8857127897816536127, guid: 8e16d983ccd5f4aec85ce0ffba691904, type: 3}
+      propertyPath: m_Size.x
+      value: 1.3362638
+      objectReference: {fileID: 0}
+    - target: {fileID: 8857127897816536127, guid: 8e16d983ccd5f4aec85ce0ffba691904, type: 3}
+      propertyPath: m_Size.y
+      value: 1.3362638
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878667525410129290, guid: 8e16d983ccd5f4aec85ce0ffba691904, type: 3}
+      propertyPath: activeByPlayerCollision
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

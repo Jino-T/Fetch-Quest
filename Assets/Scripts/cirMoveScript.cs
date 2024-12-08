@@ -19,6 +19,8 @@ public class CirMoveScript : MonoBehaviour
     public bool movY = true;
     public bool stopHooked = false;
 
+    public bool movHooked = false;
+
     public bool debugMode =false;
 
     // Internal time tracker
@@ -62,9 +64,11 @@ public class CirMoveScript : MonoBehaviour
         if (stopHooked && !isHook)
         {
             time += Time.fixedDeltaTime * speed;
+        }else if (movHooked && isHook){
+            time += Time.fixedDeltaTime * speed;
         }
 
-        if (!stopHooked)
+        if (!stopHooked && ! movHooked)
         {
             time += Time.fixedDeltaTime * speed;
         }
@@ -86,6 +90,19 @@ public class CirMoveScript : MonoBehaviour
             {
                 isHook = false;
             }
+        }else if ( movHooked){
+            if (hookList.GetTail() != null && hookList.GetTail().GetObj() != null && hookList.GetTail().GetObj().Equals(this.gameObject))
+            {
+                // Stop moving if hooked to the current object
+                isHook = true;
+                
+            }
+            else
+            {
+                isHook = false;
+                return;
+            }
+
         }
 
         // Update position
