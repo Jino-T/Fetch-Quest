@@ -165,24 +165,24 @@ public class ropeScript : MonoBehaviour
             NewBetterHook.Node rover = currNode.GetRightNode();
 
             if (!rover.Equals(sentail) && !currNode.Equals(sentail) && !currNode.Equals(grappleHook.GetTail())&& !rover.Equals(grappleHook.GetHead())) {
-                Debug.Log("it happening");
+                //Debug.Log("it happening");
 
                 if (currNode.GetObj() != null && rover.GetObj() != null) {
-                    Debug.Log("ok");
+                    //Debug.Log("ok");
                     Vector2? collisionPoint;
                     if (currNode.Equals(grappleHook.GetHead())){
-                        Debug.Log("head");
+                        //Debug.Log("head");
                         collisionPoint = CheckLayerOverlap(
                         currNode.GetObj().transform.position, 
                         rover.GetObj().transform.position,
                         6, 
                         widthCast, GetWorldHeight(currNode.GetObj())/2,  GetWorldHeight(rover.GetObj())/2, true);
 
-                        Debug.Log(currNode.GetObj().name);
-                        Debug.Log(rover.GetObj().name);
-                        Debug.Log(collisionPoint);
+                        //Debug.Log(currNode.GetObj().name);
+                        //Debug.Log(rover.GetObj().name);
+                        //Debug.Log(collisionPoint);
                     }else{
-                        Debug.Log("else");
+                        //Debug.Log("else");
                         collisionPoint = CheckLayerOverlap(
                         currNode.GetObj().transform.position, 
                         rover.GetObj().transform.position,
@@ -193,9 +193,9 @@ public class ropeScript : MonoBehaviour
                     }
                     
                     if ( collisionPoint != null){
-                        Debug.Log(currNode.GetObj().name);
+                        //Debug.Log(currNode.GetObj().name);
                     }else{
-                        Debug.Log("NO collition");
+                        //Debug.Log("NO collition");
                         //Debug.Break();
                     }
                     
@@ -280,13 +280,13 @@ public class ropeScript : MonoBehaviour
     }
 
     private NewBetterHook.Node makeHing( NewBetterHook.Node left,  NewBetterHook.Node  right, Vector2 point ){
-        Debug.Log("creating new node");
+        //Debug.Log("creating new node");
         GameObject newhingObj = Instantiate(jointPrefab, point, Quaternion.identity);
         NewBetterHook.Node sllk = grappleHook.AddNewNode(left, right, newhingObj);
         sllk.GetObj().name = sllk.GetObj().name + slj;
         slj = slj+1;
 
-        Debug.Log(left.GetObj().name + ", " + sllk.GetObj().name + ", " + right.GetObj().name);
+        //Debug.Log(left.GetObj().name + ", " + sllk.GetObj().name + ", " + right.GetObj().name);
         
         makeDistJpoint(left.GetObj(), newhingObj);
         makeDistJpoint(newhingObj, right.GetObj());
@@ -462,7 +462,7 @@ public static Vector2? CheckLayerOverlap(Vector2 pointA, Vector2 pointB, int lay
     if (hit.collider != null)
     {
         // Print the name of the object it collides with
-        Debug.Log("Collided with: " + hit.collider.gameObject.name);
+        //Debug.Log("Collided with: " + hit.collider.gameObject.name);
 
         // Calculate the point along the center line at the same distance as the hit point
         float hitDistance = Vector2.Distance(pointA, hit.point);

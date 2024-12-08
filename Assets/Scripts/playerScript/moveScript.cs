@@ -233,7 +233,7 @@ public class Movescript : MonoBehaviour
                     Debug.Log(rb.velocity.magnitude);
                     rb.velocity = Vector2.ClampMagnitude(rb.velocity, grappleVeloMag);
                     Debug.Log(rb.velocity.magnitude );
-                    Debug.Log("clap");
+                    //Debug.Log("clap");
                 }
                 
             }
