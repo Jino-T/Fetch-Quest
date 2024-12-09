@@ -49,6 +49,7 @@ public class holdAutoGrappleManager : MonoBehaviour
 
     // LineRenderer to visualize the BoxCast
     private LineRenderer lineRenderer;
+    public Material ropeMat;
 
 
     private void Start()
@@ -134,7 +135,7 @@ public class holdAutoGrappleManager : MonoBehaviour
 
                 if (hit != null ){
                     //DrawBoxCast();
-                    
+                    lineRenderer.material = ropeMat;
                     playerState.canGrappleHook = false;
                     //Debug.Log(hit.gameObject.name);
                     if ( hit.gameObject.GetComponent<Rigidbody2D>() == null){
@@ -157,9 +158,11 @@ public class holdAutoGrappleManager : MonoBehaviour
                 isBoxCasting = false;
             }
         }
-
-        if ( playerState.isGrappleHook){
-            DrawBoxCast();
+        if ( playerState.isGrappleHook|| playerState.isHookShot){
+            if ( playerState.isGrappleHook ){
+                DrawBoxCast();
+            }
+            
             lineRenderer.enabled= true;
         }else{
             lineRenderer.enabled= false;

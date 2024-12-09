@@ -10,6 +10,8 @@ public class TriggerHandler : MonoBehaviour
 
     private playerStateScript stateScript;
 
+    public Animator springAnimContrl;
+
 
     private void Start() {
         stateScript  = playerObj.GetComponent<playerStateScript>();
@@ -33,11 +35,12 @@ public class TriggerHandler : MonoBehaviour
             stateScript.canGrappleHook = true;
             stateScript.canHookShot = true;
             stateScript.isJumping  =true;
+            springAnimContrl.SetTrigger("springTrigger");
+            //springAnimContrl.trigger
             //Debug.Log("Layer matched");
 
             // Try to get the Rigidbody2D component
-            
-    }
+        }
     }
 
     /// <summary>

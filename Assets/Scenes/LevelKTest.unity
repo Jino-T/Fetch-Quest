@@ -10066,6 +10066,10 @@ PrefabInstance:
       propertyPath: levelManger
       value: 
       objectReference: {fileID: 1285619686}
+    - target: {fileID: 4259549328067472929, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
+      propertyPath: transparency
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4468426860326805640, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -24.956846

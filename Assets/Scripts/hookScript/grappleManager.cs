@@ -41,7 +41,8 @@ public class GrappleManager : MonoBehaviour
     private bool isBoxCasting = false; // Flag to track whether BoxCast is active
 
     // LineRenderer to visualize the BoxCast
-    public LineRenderer lineRenderer;
+    private LineRenderer lineRenderer;
+    public Material ropeMat;
 
 
     private void Start()
@@ -55,7 +56,7 @@ public class GrappleManager : MonoBehaviour
         //playerObject.GetComponent<GrappleController>().CreateGrappleHook( jointPrefab);
 
         // Set up the LineRenderer
-        //lineRenderer = playerObject.AddComponent<LineRenderer>();
+        lineRenderer = playerObject.AddComponent<LineRenderer>();
         //lineRenderer.positionCount = 5; // 4 points for the box corners, and 1 to close the loop
         //lineRenderer.startWidth = widthHook;
         //lineRenderer.endWidth = widthHook;
@@ -119,6 +120,7 @@ public class GrappleManager : MonoBehaviour
                     //Debug.Log("miss"); 
                 }
                 if (hit.collider != null ){
+                    lineRenderer.material = ropeMat;
                     Debug.Log(hit.collider.gameObject.name);
                     if ( hit.collider.gameObject.GetComponent<Rigidbody2D>() == null){
                         Rigidbody2D collidRigd = hit.collider.gameObject.AddComponent<Rigidbody2D>();

@@ -59,10 +59,14 @@ public class hookShotManager : MonoBehaviour
 
     public bool hasJumped =false;
 
+    public Material hookMat;
+
     // LineRenderer to visualize the BoxCast
     private LineRenderer lineRenderer;
 
     private playerStateScript playerState;
+
+    private bool dash = false;
 
 
 
@@ -101,6 +105,11 @@ public class hookShotManager : MonoBehaviour
         
     }
 
+    void Update()
+    {
+        
+    }
+
     private void OnDisable()
     {
         controls.Disable();
@@ -126,6 +135,8 @@ public class hookShotManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
+        
 
         //grappledHooked = playerState.isHookShot;
         /*
@@ -145,11 +156,9 @@ public class hookShotManager : MonoBehaviour
             hasJumped = false;
             magVelocity  = 0.5f;
         }
- 
-
-
-
+        
         if ( playerState.isHookShot){
+            
             
             //Vector2 dashDireciton = hookcastDir;
             //dashDireciton = hookcastDir;
@@ -162,6 +171,7 @@ public class hookShotManager : MonoBehaviour
                 Vector2 direction = ( this.hookObj.transform.position - this.rb.transform.position ).normalized;
 
                 Vector2 dirVec =  direction * magVelocity;
+                DrawBoxCast(direction);
 
                 if ( !hasJumped){
 
@@ -190,8 +200,13 @@ public class hookShotManager : MonoBehaviour
             if (hookObj.tag == "ObjToPlayer"){
                 //this.rb.transform.position =  hookObj.transform.position;
                 levelManger.GetComponent<levelManagerScript>().activHookedObj(hookObj);
-
+                //hookObjCopy = hookObj;
                 Dash( dashDireciton,8f);
+                dash =true;
+
+                //DrawBoxCast(hookObj.transform.position);
+                
+                
 
             }
             
@@ -211,6 +226,26 @@ public class hookShotManager : MonoBehaviour
             
         }
         
+        
+    }
+
+    private IEnumerator RunForSeconds(float seconds, GameObject poz)
+    {
+       float elapsedTime =0f;
+        while (elapsedTime < seconds && !playerState.isGrappleHook)
+        {
+            Debug.Log(poz.transform.position);
+            DrawBoxCast(poz.transform.position);
+             
+
+            // Wait for the next frame
+            yield return null;
+
+            // Update elapsed time
+            elapsedTime += Time.deltaTime;
+        }
+        dash = false;
+
     }
 
     private void Awake()
@@ -272,6 +307,8 @@ public class hookShotManager : MonoBehaviour
 
 
             if (hit.collider != null ){
+                DrawBoxCast(hit.collider.transform.position);
+                //Debug.Break();
 
                 Debug.Log(hit.collider.gameObject.name);
                 if ( hit.collider.gameObject.GetComponent<Rigidbody2D>() == null){
@@ -331,6 +368,7 @@ public class hookShotManager : MonoBehaviour
     {
         DrawBoxCast(inputDirection);
         // Perform the BoxCast using stored direction and size
+        
         RaycastHit2D hit = Physics2D.BoxCast(rb.position, new Vector2(widthHook, widthHook), 0f, inputDirection,distHook, hooks);
         return hit;
     }
@@ -340,16 +378,18 @@ public class hookShotManager : MonoBehaviour
     private void DrawBoxCast(Vector2 dirHook)
     {
         lineRenderer.enabled = true;
+        lineRenderer.material = hookMat;
 
-        lineRenderer.startWidth =widthHook;
-        lineRenderer.endWidth =widthHook;
+        lineRenderer.startWidth =0.8f;
+        lineRenderer.endWidth =0.8f;
 
         lineRenderer.SetPosition(0, rb.position);
-        if (playerState.isHookShot){
+        if (hookObj != null){
             //lineRenderer.SetPosition(1, hookedPoz);
             
             lineRenderer.SetPosition(1, hookObj.transform.position);
         }else{
+            Debug.Log("why");
             lineRenderer.SetPosition(1, transform.position + (Vector3)(dirHook.normalized * (distHook+1.35f)));
 
         }
@@ -370,6 +410,7 @@ public class hookShotManager : MonoBehaviour
 
     private void Dash(Vector2 direction, float dashBoost)
     {
+
         // Pause the game and wait for input
         //rb.velocity = Vector2.zero;
 
@@ -385,6 +426,8 @@ public class hookShotManager : MonoBehaviour
 
         //playerState.isHookShot = false;
         playerState.canGrappleHook = true;
+        StartCoroutine(RunForSeconds(0.2f, hookObj));
+        
 
     }
 

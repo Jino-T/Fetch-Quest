@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4831810395554546985}
   - component: {fileID: 7119278741393066447}
   - component: {fileID: 489686355703910936}
+  - component: {fileID: 8527409332779695410}
   m_Layer: 0
   m_Name: Spring
   m_TagString: Untagged
@@ -75,8 +76,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: -771031277, guid: 3e845912b5c1c4819b711f8a8456f31c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -119,18 +120,18 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 1
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.43636417}
+  m_Offset: {x: -0.028366089, y: -0.12449598}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.5, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.12727165}
+  m_Size: {x: 1.2836533, y: 0.26832294}
   m_EdgeRadius: 0
 --- !u!114 &7119278741393066447
 MonoBehaviour:
@@ -147,6 +148,7 @@ MonoBehaviour:
   playerObj: {fileID: 0}
   springPower: 19.5
   playerXfloat: 8
+  springAnimContrl: {fileID: 8527409332779695410}
 --- !u!251 &489686355703910936
 PlatformEffector2D:
   m_ObjectHideFlags: 0
@@ -166,3 +168,24 @@ PlatformEffector2D:
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 1
+--- !u!95 &8527409332779695410
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8125351699400637863}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e17eb36a752a84ca185d7d0a213a0c08, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

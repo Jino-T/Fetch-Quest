@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6da56aa4f1884dbe88e6d06a5cc165a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transparency: 0.5
+  transparency: 0
 --- !u!1 &6762952205910139449
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,9 +351,7 @@ GameObject:
   - component: {fileID: 3125053920535716864}
   - component: {fileID: 1074824493478515423}
   - component: {fileID: 8787847384905406136}
-  - component: {fileID: 3443143588483585045}
   - component: {fileID: 4195030297254340668}
-  - component: {fileID: 3061645747885917488}
   - component: {fileID: 1805242115115995254}
   - component: {fileID: 6816933423998085362}
   - component: {fileID: 3426453267352212336}
@@ -503,8 +501,7 @@ LineRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 0}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -579,7 +576,7 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 1
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
@@ -633,7 +630,7 @@ MonoBehaviour:
   activeWidthCast: 0.1
   slj: 0
   scalingFactor: 0.05
-  grap: {fileID: 3061645747885917488}
+  grap: {fileID: 0}
   ropeLength: 0
 --- !u!114 &8787847384905406136
 MonoBehaviour:
@@ -655,29 +652,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   boxCastDuration: 0
---- !u!114 &3443143588483585045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6762952205910139449}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65ed1704cce57441ab55683adac4c025, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hookDrag: 0
-  hookType: 0
-  mouseAct: 1
-  widthHook: 5
-  jointPrefab: {fileID: 2922789774956722926, guid: 255e1d993372d4b3c8b87be728c50db8, type: 3}
-  hooks:
-    serializedVersion: 2
-    m_Bits: 512
-  playerMoveState: {fileID: 1805242115115995254}
-  boxCastDuration: 3
-  lineRenderer: {fileID: 8017516171749559171}
+  ropeMat: {fileID: 2100000, guid: 917c4ccdd9cff40ebb821052dd57852a, type: 2}
 --- !u!114 &4195030297254340668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -703,33 +678,7 @@ MonoBehaviour:
   boxCastDuration: 3
   isBoxCasting: 0
   hasJumped: 0
---- !u!114 &3061645747885917488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6762952205910139449}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a9c260799c804e4685db18de34fa1c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hookDrag: 0
-  hookType: 1
-  hooked: 0
-  canHook: 0
-  mouseAct: 0
-  distHook: 5
-  widthHook: 4
-  jointPrefab: {fileID: 2922789774956722926, guid: 255e1d993372d4b3c8b87be728c50db8, type: 3}
-  hooks:
-    serializedVersion: 2
-    m_Bits: 512
-  playerMoveState: {fileID: 1805242115115995254}
-  playerObject: {fileID: 6762952205910139449}
-  boxCastDuration: 3
-  lineRenderer: {fileID: 8017516171749559171}
+  hookMat: {fileID: 2100000, guid: 7ecbbc61904c648428e7422d56378eb9, type: 2}
 --- !u!114 &1805242115115995254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -760,7 +709,7 @@ MonoBehaviour:
   airHorizontalCap: 15
   airRisingCap: 20
   airFallingCap: 18
-  grappleManager: {fileID: 3061645747885917488}
+  grappleManager: {fileID: 0}
   rb: {fileID: 765026943714449800}
   animator: {fileID: 1241854862734414164}
   spriteRenderer: {fileID: 680006865465951130}
