@@ -257,11 +257,15 @@ PrefabInstance:
     - target: {fileID: 1805242115115995254, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
       propertyPath: animator
       value: 
-      objectReference: {fileID: 824868202}
+      objectReference: {fileID: 0}
     - target: {fileID: 1805242115115995254, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
       propertyPath: spriteRenderer
       value: 
       objectReference: {fileID: 824868217}
+    - target: {fileID: 3838681626516652161, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4468426860326805640, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -24.956846
@@ -301,6 +305,10 @@ PrefabInstance:
     - target: {fileID: 4468426860326805640, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4901598230338622345, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6762952205910139449, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
       propertyPath: m_Name
@@ -7423,11 +7431,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6762952205910139449, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
   m_PrefabInstance: {fileID: 423913195}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &824868202 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 6401386545880907496, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
-  m_PrefabInstance: {fileID: 423913195}
-  m_PrefabAsset: {fileID: 0}
 --- !u!212 &824868217 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 680006865465951130, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
@@ -14542,7 +14545,7 @@ MonoBehaviour:
   playerMoveState: {fileID: 1285619687}
   playerObject: {fileID: 0}
   boxCastDuration: 3
-  lineRenderer: {fileID: 0}
+  ropeMat: {fileID: 0}
 --- !u!4 &1285619689
 Transform:
   m_ObjectHideFlags: 0
