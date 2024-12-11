@@ -1029,7 +1029,7 @@ GameObject:
   - component: {fileID: 1126543112}
   - component: {fileID: 1126543114}
   - component: {fileID: 1126543115}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

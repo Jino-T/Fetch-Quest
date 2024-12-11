@@ -681,7 +681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
-  playerObj: {fileID: 0}
+  playerObj: {fileID: 6762952205910139449, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
   active: 0
   sides: 0
   isLeft: 0
@@ -1036,7 +1036,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
-  playerObj: {fileID: 0}
+  playerObj: {fileID: 6762952205910139449, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
   active: 0
   sides: 1
   isLeft: 1
@@ -1219,7 +1219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
-  playerObj: {fileID: 0}
+  playerObj: {fileID: 6762952205910139449, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
   active: 0
   sides: 1
   isLeft: 1
@@ -1402,7 +1402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
-  playerObj: {fileID: 0}
+  playerObj: {fileID: 6762952205910139449, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}
   active: 0
   sides: 0
   isLeft: 0
