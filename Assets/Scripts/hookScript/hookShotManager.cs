@@ -262,7 +262,8 @@ public class hookShotManager : MonoBehaviour
     private void Hook()
     { 
         Debug.Log("hooking, "+ playerState.canHookShot);
-        
+        SoundManager.PlaySound(SoundManager.instance.HookSound);
+
 
         if ( !playerState.isHookShot  && !playerState.isGrappleHook && playerState.canHookShot){
 

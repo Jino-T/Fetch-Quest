@@ -33,6 +33,8 @@ public class LockedDoorScript : MonoBehaviour
         //if the collision is the key and the player is holding all the keys in the level
         if (other.gameObject.CompareTag("Player") && 
             levelManager.GetComponent<levelManagerScript>().canExit) {
+            SoundManager.PlaySound(SoundManager.instance.collectItemSound);
+
             levelManager.GetComponent<levelManagerScript>().atExit = true;
         }
     }

@@ -173,6 +173,8 @@ public class GrappleManager : MonoBehaviour
     { //Debug.Log("hooking");
         if (hooked)
         {
+            SoundManager.PlaySound(SoundManager.instance.RopeSound);
+
             playerObject.GetComponent<GrappleController>().DeactivateHookConnection();
             hooked =  false;
         }

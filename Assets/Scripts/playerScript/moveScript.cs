@@ -438,6 +438,8 @@ public class Movescript : MonoBehaviour
 {
     if (killLayerOrTag(other.gameObject))
     {
+        SoundManager.PlaySound(SoundManager.instance.DeathSound);
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
        

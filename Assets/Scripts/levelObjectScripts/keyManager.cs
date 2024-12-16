@@ -39,6 +39,7 @@ public class keyManager : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other) {
        if (other.gameObject.CompareTag("Player") && !isPickedUp) {
             isPickedUp = true;
+            SoundManager.PlaySound(SoundManager.instance.collectItemSound);
             levelManager.GetComponent<levelManagerScript>().numKeysHeld += 1;
        }
     }
