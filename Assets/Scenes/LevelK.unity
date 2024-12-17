@@ -171,8 +171,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5532108509479687318, guid: 88648fb26d08f484fa7d7886f15ae288, type: 3}
+      propertyPath: hasKeys
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5532108509479687318, guid: 88648fb26d08f484fa7d7886f15ae288, type: 3}
       propertyPath: numKeys
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5532108509479687318, guid: 88648fb26d08f484fa7d7886f15ae288, type: 3}
       propertyPath: hasLevers
@@ -375,7 +379,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 3.2, y: 3.2}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -425,7 +429,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9b7e97378a436884d963d5cd2f4fe0b6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1638,12 +1642,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8380073503860014325, guid: f0983128baf19802981959de7065c53c, type: 3}
+    - {fileID: 1277764581591622246, guid: f0983128baf19802981959de7065c53c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7991379795963782417, guid: f0983128baf19802981959de7065c53c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1664716126}
+      addedObject: {fileID: 1664716124}
   m_SourcePrefab: {fileID: 100100000, guid: f0983128baf19802981959de7065c53c, type: 3}
 --- !u!1 &1271462996
 GameObject:
@@ -7707,7 +7712,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 50296f7d72fdcaea1b9f47b99c721c78, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8085,7 +8090,7 @@ BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 6659531445530664428, guid: f0983128baf19802981959de7065c53c, type: 3}
   m_PrefabInstance: {fileID: 1091757134}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1664716126
+--- !u!114 &1664716124
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8094,14 +8099,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1664716121}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbcbc1c65d044e2bcbbcc112e80a04a7, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b4e4b96c79d12f48830175015815929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   doorCollider: {fileID: 1664716123}
-  nextScene: 3
-  locked: 1
-  player: {fileID: 906920301}
-  levelManager: {fileID: 212854908}
+  nextScene: 7
 --- !u!1 &1845041276
 GameObject:
   m_ObjectHideFlags: 0
