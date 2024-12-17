@@ -454,7 +454,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0, y: 0.8125, z: 0}
+  m_ChunkCullingBounds: {x: 0.5, y: 2.125, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
@@ -1168,7 +1168,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0, y: 0.078125, z: 0}
+  m_ChunkCullingBounds: {x: 0.5, y: 0.65625, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
@@ -2513,7 +2513,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 50296f7d72fdcaea1b9f47b99c721c78, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2608,27 +2608,30 @@ MonoBehaviour:
   accelerationSpeed: 0.4
   airSpeed: 0.2
   jumpForce: 5
-  jumpHoldForce: 30
+  jumpHoldForceScale: 0
   maxJumpHoldTime: 0.3
   slideDuration: 0.3
-  jumpFloat: 1
   groundCheckPoint: {fileID: 1960585792}
   maxAirSpeed: 20
   maxRunSpeed: 7
   minSpeed: 3
   groundDrag: 1.5
   airDrag: 0.5
-  isMoving: 0
-  hooked: 0
+  grappleVeloMag: 0
+  groundCap: 0
+  airHorizontalCap: 0
+  airRisingCap: 0
+  airFallingCap: 0
   grappleManager: {fileID: 1285619688}
   rb: {fileID: 1900261312}
-  groundLayer:
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  holdJump: 0
+  killTag: 
+  killLayer:
     serializedVersion: 2
-    m_Bits: 64
-  groundCheckRadius: 1
-  groundCheckOffset: {x: 0, y: -0.5}
-  isJumping: 0
-  cytotecFames: 0
+    m_Bits: 0
+  timeBuffTime: 0
   conSidedGround: 0
 --- !u!114 &1285619688
 MonoBehaviour:
@@ -2645,6 +2648,7 @@ MonoBehaviour:
   hookDrag: 0
   hookType: 1
   hooked: 0
+  canHook: 0
   mouseAct: 1
   distHook: 0
   widthHook: 0
@@ -3099,6 +3103,7 @@ MonoBehaviour:
   hookDrag: 0
   hookType: 1
   hooked: 0
+  canHook: 0
   mouseAct: 1
   distHook: 5
   widthHook: 4
@@ -3126,27 +3131,30 @@ MonoBehaviour:
   accelerationSpeed: 0.5
   airSpeed: 0.02
   jumpForce: 4
-  jumpHoldForce: 20
+  jumpHoldForceScale: 0
   maxJumpHoldTime: 0.3
   slideDuration: 0.3
-  jumpFloat: 0.5
   groundCheckPoint: {fileID: 1960585791}
   maxAirSpeed: 13
   maxRunSpeed: 5.5
   minSpeed: 2
   groundDrag: 1
   airDrag: 0.25
-  isMoving: 0
-  hooked: 0
+  grappleVeloMag: 0
+  groundCap: 0
+  airHorizontalCap: 0
+  airRisingCap: 0
+  airFallingCap: 0
   grappleManager: {fileID: 1900261314}
   rb: {fileID: 1900261312}
-  groundLayer:
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  holdJump: 0
+  killTag: 
+  killLayer:
     serializedVersion: 2
-    m_Bits: 64
-  groundCheckRadius: 1
-  groundCheckOffset: {x: 0, y: -0.5}
-  isJumping: 0
-  cytotecFames: 5
+    m_Bits: 0
+  timeBuffTime: 0
   conSidedGround: 0
 --- !u!114 &1900261316
 MonoBehaviour:
@@ -3160,20 +3168,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f53b599649d4f0d99266ed28398a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  test: {fileID: 1284126425}
   playerObj: {fileID: 1900261311}
   jointPrefab: {fileID: 2922789774956722926, guid: 255e1d993372d4b3c8b87be728c50db8, type: 3}
-  hookPointPrefab: {fileID: 1284126425}
-  collisionLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  maxJointDistance: 1
-  mainCamera: {fileID: 1600021090}
+  grappleHook: {fileID: 0}
   minDist: 0.2
   widthCast: 0.5
   activeWidthCast: 0.1
   slj: 0
-  isActiv: 0
   scalingFactor: 0.05
   grap: {fileID: 1285619688}
   ropeLength: 0
