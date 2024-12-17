@@ -2675,11 +2675,39 @@ PrefabInstance:
       propertyPath: nextScene
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1277764581591622246, guid: f0983128baf19802981959de7065c53c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7991379795963782417, guid: f0983128baf19802981959de7065c53c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1091757137}
   m_SourcePrefab: {fileID: 100100000, guid: f0983128baf19802981959de7065c53c, type: 3}
+--- !u!1 &1091757135 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7991379795963782417, guid: f0983128baf19802981959de7065c53c, type: 3}
+  m_PrefabInstance: {fileID: 1091757134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &1091757136 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 6659531445530664428, guid: f0983128baf19802981959de7065c53c, type: 3}
+  m_PrefabInstance: {fileID: 1091757134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1091757137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091757135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b4e4b96c79d12f48830175015815929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doorCollider: {fileID: 1091757136}
+  nextScene: 9
 --- !u!1 &1174883962 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6762952205910139449, guid: 273d34023d5ba4020a0ad8143953d8eb, type: 3}

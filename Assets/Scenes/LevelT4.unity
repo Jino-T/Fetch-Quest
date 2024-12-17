@@ -28336,10 +28336,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1277764581591622246, guid: f0983128baf19802981959de7065c53c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7991379795963782417, guid: f0983128baf19802981959de7065c53c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1879703057}
   m_SourcePrefab: {fileID: 100100000, guid: f0983128baf19802981959de7065c53c, type: 3}
 --- !u!1001 &1101021632
 PrefabInstance:
@@ -31851,6 +31855,30 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!1 &1879703056 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7991379795963782417, guid: f0983128baf19802981959de7065c53c, type: 3}
+  m_PrefabInstance: {fileID: 1091757134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1879703057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879703056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b4e4b96c79d12f48830175015815929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doorCollider: {fileID: 1879703058}
+  nextScene: 5
+--- !u!61 &1879703058 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 6659531445530664428, guid: f0983128baf19802981959de7065c53c, type: 3}
+  m_PrefabInstance: {fileID: 1091757134}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2023600498
 GameObject:
   m_ObjectHideFlags: 0
