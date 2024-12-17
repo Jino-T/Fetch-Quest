@@ -17,5 +17,6 @@ public class DoorScript : MonoBehaviour
             SceneManager.LoadScene(nextScene);        
         }
     }
+
         
 }
